@@ -11,6 +11,7 @@ var bespoke = require('bespoke'),
   pdf = require('bespoke-pdf'),
   progress = require('bespoke-progress'),
   scale = require('bespoke-scale'),
+  sync = require('bespoke-sync/client'),
   touch = require('bespoke-touch');
 
 // Bespoke.js
@@ -25,6 +26,7 @@ bespoke.from('article', [
   pdf(),
   progress(),
   scale(),
+  sync(),
   touch()
 ]);
 
