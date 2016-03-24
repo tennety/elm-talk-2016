@@ -10,84 +10,232 @@ html
   body
 
     article
-
+      // INTRO
       section(data-bespoke-backdrop='elm')
         .content
           h1.bullet Elm <small>or</small> FUD
-          img.bullet(src="/images/elmer.png")
           h3.bullet Hunting Bugs with the Compiler
+          br
+          br
+          pre.bullet
+            code.elm
+              | { name    = "Chandu Tennety"
+              | , company = "Instructure"
+              | , twitter = "tennety"
+              | , github  = "tennety"
+              | }
+
+
+      section
+        .content
+          h2 Why Elm?
+          h3.bullet ...and why should I care?
+
+          img.bullet(src="/images/elmer.png")
           img.bullet(src="/images/bugs.png")
+
         aside
-          p Trying out notes
+          p JavaScript programmers are like Elmer Fudd.
+          p JavaScript is Bugs Bunny.
+          p `undefined is not a function` is like "Eh, what's up doc?"
+          p We get so used to keeping all those possibilities in our head.
+          p Bugs shows up and whacks us in the head with a giant hammer and we go "Oh, yeah, that's right."
+          p And we pull out our ES6 "fat arrows" and go hunting.
+
 
       section
-        h2 Who am I?
-        h3.bullet
-        pre.bullet
-          code.elm
-           | {
-           |   name    = "Chandu Tennety"
-           | , company = "Instructure"
-           | , twitter = "tennety"
-           | , github  = "tennety"
-           | }
+        .content
+          img.bullet.with-bg(src="/images/elmer-iron-man.jpg")
+
+        aside
+          p Elm turns us into Iron Man.
+
 
       section
-        h2 Why Elm?
-        h3.bullet ...and why should I care?
+        .content
+          h2 Why Elm?
+          h3.bullet ...and why should I care?
+          br
+          ul
+            li Fully functional, compile-to-JS
+            li Zealously helpful compiler
+            li Built for reactive UIs, supports FRP out of the box
+            li Backed by approachable, friendly community
+
+        aside
+          p We'll talk about more language features (and how they help) in a bit.
+          p Helpful error messages, diffs, hints...like, <em>really</em> helpful.
+          p HTML/CSS, Canvas, Native?
+          p This is the best part. Slack channel, github, google groups.
+          p Let's go over each in more detail.
+
+
+      // FEATURES
+      section(data-bespoke-backdrop='elm')
+        .content
+          h1 Language Features
+
 
       section
-        h2 Keyboard Interaction
-        h3 Powered by <a href="https://github.com/markdalgleish/bespoke-keys">bespoke-keys</a>
+        .content
+          h2.bullet Language Features
+          br
+          br
+          ul
+            li Static types
+            li Pure functions
+            li Immutable data structures
+            li JS interoperability
+
+        aside
+          p Static typing provides guarantees that help eliminate a whole class of runtime errors.
+          p Pure functions allow fast reasoning without worrying about side effects to the state.
+          p Immutability guarantees referential transparency and that a set of data transformations always returns the same results.
+          p Interop allows powerful yet controlled access to the native/host environment
+
 
       section
-        h2 Touch Interaction
-        h3 Powered by <a href="https://github.com/markdalgleish/bespoke-touch">bespoke-touch</a>
+        .content
+          h2.bullet Language Features
+          h4.bullet Static types
+          br
+          ul
+            li Contracts between functions and data
+
+        aside
+          p Static types often create FUD among programmers used to dynamically typed languages.
+          p I've used Ruby, JS, and Clojure, and one thing they all share is a conscious desire to distance themselves from languages like Java.
+          p But there's a distinction between types (or classes and interfaces) in Java and types in functional languages.
+          p Types in Elm serve to define <em>contracts</em> between functions and the data they work with.
+          p These contracts let the compiler guide you away from ever letting bad data in.
+          p This has less to do with VM optimization, and more with helping the programmer work with a smaller mental overhead.
+
 
       section
-        h2 Responsive Slides
-        h3 Powered by <a href="https://github.com/markdalgleish/bespoke-scale">bespoke-scale</a>
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          br
+          br
+          h1.bullet Example 1: No Nulls
+
+        aside
+          p Let's look at an example.
+
 
       section
-        h2 Bullet List
-        h3.bullet Powered by <a href="https://github.com/markdalgleish/bespoke-bullets">bespoke-bullets</a>
-        ul
-          li Bullet 1
-          li Bullet 2
-          li Bullet 3
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          pre.bullet
+            code.elm
+              | longestNameLength: List String -> Maybe Int -- type annotation
+              | longestNameLength nameList =
+              |   List.maximum (List.map String.length nameList)
+          br
+          pre.bullet
+            code.elm
+              | longestNameLength ["Tony", "Steve", "T'Challa"]
+              | -- Just 8 : Maybe.Maybe Int
+            code.bullet.elm
+              | longestNameLength [] -- Nothing : Maybe.Maybe Int
+            code.bullet.elm
+              | longestNameLength [1, 2] -- Compile error
+            code.bullet.elm
+              | longestNameLength ["Peter", 2] -- Compile error
+
+        aside
+          p This example is inspired by http://elm-lang.org/guide/model-the-problem
+          p The type annotation is optional, Elm can infer the input and output types
+          p The Maybe type kills null. The function explicitly tells you it may return Nothing, so you <em>have</em> to handle it.
+          p Our function expects a List of Strings, because only then can it successfully call String.length on the List.
+          p Giving it other types in the List causes compile errors.
+          p That's not to say you can't mix types in Lists, you just need to be explicit about the shape of your data!
+          p List's `head` and `tail` functions return Maybes to deal with empty lists.
+
 
       section
-        h2 Syntax Highlighting
-        h3 Powered by <a href="http://twitter.com/LeaVerou">Lea Verou</a>'s <a href="https://github.com/LeaVerou/prism">Prism</a>
-        pre
-          code.language-javascript.
-            bespoke.from('article', [
-              classes(),
-              keys(),
-              touch(),
-              bullets('li, .bullet')
-            ]);
+        .content
+          h3.bullet Doing this in JavaScript?
+          img.bullet(src="/images/doc.png")
 
-      section(data-bespoke-hash='named-route')
-        h2 Named Route
-        h3 Powered by <a href="https://github.com/markdalgleish/bespoke-hash">bespoke-hash</a>
-        p Look up! This route has been named with a <em>'data-bespoke-hash'</em> attribute.
-
-      section.emphatic-text(data-bespoke-backdrop='emphatic')
-        h2 Emphatic Slide!
-        h3 Powered by <a href="https://github.com/markdalgleish/bespoke-backdrop">bespoke-backdrop</a>
 
       section
-        h2.bullet Just the beginning...
-        br
-        ul
-          li Edit <a href="http://jade-lang.com/">Jade</a> markup in <em>'src/index.jade'</em>
-          li Edit <a href="http://learnboost.github.io/stylus/">Stylus</a> styles in <em>'src/styles/main.styl'</em>
-          li Edit JavaScript in <em>'src/scripts/main.js'</em>
-        br
-        ul
-          li
-            strong Enjoy! :)
-            a(href='http://twitter.com/markdalgleish')  -@markdalgleish
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          br
+          br
+          h1.bullet Example 2: Pattern Matching
+
+        aside
+
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          pre.bullet
+            code.elm
+              | type Maybe a = Just a | Nothing
+          br
+          pre.bullet
+            code.elm
+              | message: Maybe Int -> String
+              | message length =
+              |   case length of
+              |     Just num ->
+              |       "The longest name is " ++ (toString num) ++ " characters."
+              |     Nothing  ->
+              |       "You gotta give me something to work with here."
+          br
+          pre.bullet
+            code.elm
+              | message (longestNameLength ["Sharon Carter", "Natasha Romanoff"])
+              | -- The longest name is 16 characters.
+              | 
+              | message (longestNameLength [])
+              | -- You gotta give me something to work with here.
+
+
+        aside
+
+
+      section(data-bespoke-backdrop='elm')
+        .content
+          h1 Functional Reactive Programming (FRP) in Elm
+
+
+      section
+        .content
+          h2 FRP in Elm
+          <br>
+          img.with-bg.bullet(src="/images/arch.png")
+          cite
+            a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
+
+        aside
+          p User actions, Ajax, time etc are streams of inputs to the system
+          p App state is the result of transformations over time
+          p The view is a function of the app state
+
+
+      section
+        .content
+          h2 FRP in Elm
+          <br>
+          img.with-bg.bullet(src="/images/signals.png")
+          cite
+            a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
+
+        aside
+          p The central `foldp` is responsible for maintaining the app state across the different input streams.
+          p Low-level events are mapped to higher level actions which trigger updates
+          p The updates are folded over the app state to generate new state
+          p The view reactively renders the new app state
+          p This architecture is modular, or "fractal"
+
+
 
     script(src='build/build.js')

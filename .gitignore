@@ -3,3 +3,5 @@ bower_components
 dist
 pdf
 bespoke-theme-*
+elm-package.json
+elm-stuff
