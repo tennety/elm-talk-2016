@@ -101,6 +101,7 @@ html
           br
           ul
             li Contracts between functions and data
+            li Eliminating nulls
 
         aside
           p Static types often create FUD among programmers used to dynamically typed languages.
@@ -117,7 +118,7 @@ html
           h4.bullet Static types
           br
           br
-          h1.bullet Example 1: No Nulls
+          h1.bullet Example 1
 
         aside
           p Let's look at an example.
@@ -145,7 +146,6 @@ html
               | longestNameLength ["Peter", 2] -- Compile error
 
         aside
-          p This example is inspired by http://elm-lang.org/guide/model-the-problem
           p The type annotation is optional, Elm can infer the input and output types
           p The Maybe type kills null. The function explicitly tells you it may return Nothing, so you <em>have</em> to handle it.
           p Our function expects a List of Strings, because only then can it successfully call String.length on the List.
@@ -166,10 +166,11 @@ html
           h4.bullet Static types
           br
           br
-          h1.bullet Example 2: Pattern Matching
+          h1.bullet Example 2
 
         aside
-
+          p In the previous example, we encountered the Maybe type.
+          p Lets take a closer look at it.
 
 
       section
@@ -198,8 +199,60 @@ html
               | message (longestNameLength [])
               | -- You gotta give me something to work with here.
 
+        aside
+          p Static types give us powerful ways of working with expectations.
+          p This is different from OOP land, where you may expect a subclass or check if an object responds to a method.
+          p Maybe here is an example of a Union Type or Tagged Union, where the type can carry additional values.
+          p As soon as the compiler sees the case, it will not let you terminate it without handling all possible values of the type.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          pre.bullet
+            code.elm
+              | type Power = Throw String | Run Int | Shrink
+          br
+          pre.bullet
+            code.elm
+              | comment: String -> Power -> String
+              | comment hero power =
+              |   let
+              |     subject = hero ++ " can "
+              |     predicate =
+              |       case power of
+              |         Throw name ->
+              |            "throw " ++ name
+              |         Run speed ->
+              |           "run at " ++ (toString speed) ++ " minutes a mile"
+              |         Shrink ->
+              |           "shrink in size"
+              |   in
+              |     subject ++ predicate ++ "."
+          br
+          pre.bullet
+            code.elm
+              | List.map (comment "Ant-Man") [Throw "darts", Run 6, Shrink]
+              | 
+              | -- ["Ant-Man can throw darts.",
+              |     "Ant-Man can run at 6 minutes a mile.",
+              |     "Ant-Man can shrink in size."] : List String
 
         aside
+          p Finally we map the comment function over a list of Powers.
+          p The case allows destructuring of the tagged value.
+          p Notice that the comment function is curried.
+          p We'll talk about currying and other functional features in a bit.
+          p There can be NO runtime exceptions in this code. Guaranteed.
+          p If there's a new power, we need to add it to the Union Type.
+          p Then we have to explicitly account for it everywhere, or the code won't compile.
+
+
+      section
+        .content
+          h3.bullet Doing this in JavaScript?
+          img.bullet(src="/images/bugs-dazed.jpg")
 
 
       section(data-bespoke-backdrop='elm')
