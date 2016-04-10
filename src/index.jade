@@ -83,14 +83,14 @@ html
           br
           ul
             li Static types
-            li Pure functions
             li Immutable data structures
+            li Pure functions
             li JS interoperability
 
         aside
           p Static typing provides guarantees that help eliminate a whole class of runtime errors.
-          p Pure functions allow fast reasoning without worrying about side effects to the state.
           p Immutability guarantees referential transparency and that a set of data transformations always returns the same results.
+          p Pure functions allow fast reasoning without worrying about side effects to the state.
           p Interop allows powerful yet controlled access to the native/host environment
 
 
@@ -100,6 +100,7 @@ html
           h4.bullet Static types
           br
           ul
+            li Defining the "shape" of data
             li Contracts between functions and data
             li Eliminating nulls
 
@@ -141,16 +142,15 @@ html
             code.bullet.elm
               | longestNameLength [] -- Nothing : Maybe.Maybe Int
             code.bullet.elm
-              | longestNameLength [1, 2] -- Compile error
+              | longestNameLength [1, 2] -- Compile error, expects Strings
             code.bullet.elm
-              | longestNameLength ["Peter", 2] -- Compile error
+              | longestNameLength ["Peter", 2] -- Compile error, expects all Strings
 
         aside
           p The type annotation is optional, Elm can infer the input and output types
           p The Maybe type kills null. The function explicitly tells you it may return Nothing, so you <em>have</em> to handle it.
           p Our function expects a List of Strings, because only then can it successfully call String.length on the List.
           p Giving it other types in the List causes compile errors.
-          p That's not to say you can't mix types in Lists, you just need to be explicit about the shape of your data!
           p List's `head` and `tail` functions return Maybes to deal with empty lists.
 
 
@@ -253,6 +253,50 @@ html
         .content
           h3.bullet Doing this in JavaScript?
           img.bullet(src="/images/bugs-dazed.jpg")
+
+
+      section
+        .content
+          h2.bullet Language Features
+          h4.bullet Immutable data structures
+          br
+          ul
+            li Lists and Arrays
+            li Sets and Dictionaries
+            li Records and Tuples
+
+        aside
+          p We've already looked at lists. Arrays are built for positional access.
+          p Sets are ideal for set operations.
+          p Dictionaries are like hashes, a list of key-value pairs.
+          p Arrays, Sets and Dicts have no literal syntax, but can be converted to/from Lists.
+          p Records are also key-value pairs, and structurally typed. They are more like JS objects.
+          p Tuples are like lightweight records. Values can be different types.
+
+
+      section
+        .content
+          h2.bullet Language Features
+          h4.bullet Pure Functions
+          br
+          ul
+            li Modularity
+            li Composability
+            li Very easy to reason about and test
+            li Strict management of state
+
+          aside
+            p Pure functions:
+            p Rely on no other inputs except the arguments
+            p Do not modify state outside the function
+            p Always return the same values for the same inputs
+
+
+      section
+        .content
+          h2.bullet Language Features
+          h4.bullet JavaScript Interoperability
+
 
 
       section(data-bespoke-backdrop='elm')
