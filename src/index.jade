@@ -230,23 +230,39 @@ html
               |           "shrink in size"
               |   in
               |     subject ++ predicate ++ "."
+
+        aside
+          p We define a comment function that takes the name of a hero, a Power, and returns a sentence.
+          p The case allows destructuring of the tagged value.
+          p If there's a new power, we need to add it to the Union Type.
+          p Then we have to explicitly account for it everywhere, or the code won't compile.
+          p There can be NO runtime exceptions in this code. Guaranteed.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          pre
+            code.elm
+              | -- type Power = Throw String | Run Int | Shrink
+              | -- comment: String -> Power -> String
           br
           pre.bullet
             code.elm
               | List.map (comment "Ant-Man") [Throw "darts", Run 6, Shrink]
               | 
-              | -- ["Ant-Man can throw darts.",
+              | {- ["Ant-Man can throw darts.",
               |     "Ant-Man can run at 6 minutes a mile.",
-              |     "Ant-Man can shrink in size."] : List String
+              |     "Ant-Man can shrink in size."] : List String -}
+              | 
+              | List.map (comment "Captain America") [Throw "shield", Run 4]
+              | List.map (comment "Black Panther") [Throw "Bucky", Run 4]
 
         aside
-          p Finally we map the comment function over a list of Powers.
-          p The case allows destructuring of the tagged value.
+          p We can map the comment function over a list of Powers.
           p Notice that the comment function is curried.
           p We'll talk about currying and other functional features in a bit.
-          p There can be NO runtime exceptions in this code. Guaranteed.
-          p If there's a new power, we need to add it to the Union Type.
-          p Then we have to explicitly account for it everywhere, or the code won't compile.
 
 
       section
@@ -282,7 +298,6 @@ html
           ul
             li Modularity
             li Composability
-            li Very easy to reason about and test
             li Strict management of state
 
           aside
@@ -290,6 +305,50 @@ html
             p Rely on no other inputs except the arguments
             p Do not modify state outside the function
             p Always return the same values for the same inputs
+            p So they are very easy to reason about and test
+            p No mocking, confugration
+
+
+      section
+        .content
+          h2.bullet Language Features
+          h4.bullet Pure Functions
+          br
+          h3.bullet Modularity
+          br
+          pre.bullet
+            code.elm
+              | String.repeat: Int -> String -> String
+              | String.padLeft: Int -> Char -> String -> String
+              | String.foldl: (Char -> b -> b) -> b -> String -> b
+              | > foldl cons "" "time" == "emit"
+              | 
+              | List.member: a -> List a -> Bool
+              | List.intersperse: a -> List a -> List a
+              | List.scanl: (a -> b -> b) -> b -> List a -> List b
+              | > scanl (+) 0 [1,2,3,4] == [0,1,3,6,10]
+
+        aside
+          p Functions can be described entirely by the inputs and the body.
+          p This means they don't need to be defined on an object/class.
+          p They are available as a module on a type.
+          p A lot of utility functions are exposed as part of a module, such as String and List.
+          p It's a good thing we don't have to depend on the npm padLeft module
+          p String.foldl: takes a function that can take a char and a type of b and return a type of b,
+          p an initial value of type b, and a string (which furnishes the chars) and returns the result of type b.
+          p List.scanl: takes a function that can take a type a value and a type b value and return a type b value,
+          p an initial value of type b, and a list of type a, and returns the resulting List of type b.
+
+
+      section
+        .content
+          h2.bullet Language Features
+          h4.bullet Pure Functions
+          br
+          h3.bullet Composability
+          br
+          pre.bullet
+            code.elm
 
 
       section
