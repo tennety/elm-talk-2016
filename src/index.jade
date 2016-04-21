@@ -37,15 +37,15 @@ html
         aside
           p JavaScript programmers are like Elmer Fudd.
           p Every morning we pull out our ES6 "fat arrows" and go hunting.
-          p JavaScript is Bugs Bunny.
+          p So what does that make JavaScript? Bugs Bunny.
           p `undefined is not a function` is like "Eh, what's up doc?"
-          p We get so used to keeping all those possibilities in our head.
           p Bugs shows up and whacks us in the head with a giant hammer and we go "Oh, yeah, that's right."
+          p We get so used to keeping all those possibilities in our head.
 
 
       section
         .content
-          img.bullet.with-bg(src="/images/elmer-iron-man.jpg")
+          img.bullet(src="/images/elmer-iron-man.jpg")
 
         aside
           p Elm turns us into Iron Man.
@@ -96,7 +96,7 @@ html
 
       section
         .content
-          h2.bullet Language Features
+          h2 Language Features
           h4.bullet Static types
           br
           ul
@@ -131,7 +131,7 @@ html
           h4.bullet Static types
           pre.bullet
             code.elm
-              | longestNameLength: List String -> Maybe Int -- type annotation
+              | longestNameLength: List String -> Maybe Int
               | longestNameLength nameList =
               |   List.maximum (List.map String.length nameList)
           br
@@ -142,9 +142,9 @@ html
             code.bullet.elm
               | longestNameLength [] -- Nothing : Maybe.Maybe Int
             code.bullet.elm
-              | longestNameLength [1, 2] -- Compile error, expects Strings
+              | longestNameLength [1, 2] -- Compile error
             code.bullet.elm
-              | longestNameLength ["Peter", 2] -- Compile error, expects all Strings
+              | longestNameLength ["Peter", 2] -- Compile error
 
         aside
           p The type annotation is optional, Elm can infer the input and output types
@@ -190,14 +190,6 @@ html
               |       "The longest name is " ++ (toString num) ++ " characters."
               |     Nothing  ->
               |       "You gotta give me something to work with here."
-          br
-          pre.bullet
-            code.elm
-              | message (longestNameLength ["Sharon Carter", "Natasha Romanoff"])
-              | -- The longest name is 16 characters.
-              | 
-              | message (longestNameLength [])
-              | -- You gotta give me something to work with here.
 
         aside
           p Static types give us powerful ways of working with expectations.
@@ -210,12 +202,28 @@ html
         .content
           h2 Language Features
           h4.bullet Static types
-          pre.bullet
+          pre
             code.elm
-              | type Power = Throw String | Run Int | Shrink
+              |-- type Maybe a = Just a | Nothing
+              |-- message: Maybe Int -> String
           br
           pre.bullet
             code.elm
+              | message (longestNameLength ["Sharon Carter", "Natasha Romanoff"])
+              | -- The longest name is 16 characters.
+              | 
+              | message (longestNameLength [])
+              | -- You gotta give me something to work with here.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          pre.bullet
+            code.elm
+              | type Power = Throw String | Run Int | Shrink
+              | 
               | comment: String -> Power -> String
               | comment hero power =
               |   let
@@ -257,7 +265,7 @@ html
               |     "Ant-Man can shrink in size."] : List String -}
               | 
               | List.map (comment "Captain America") [Throw "shield", Run 4]
-              | List.map (comment "Black Panther") [Throw "Bucky", Run 4]
+              | List.map (comment "Hawkeye") [Throw "Ant-Man", Run 6]
 
         aside
           p We can map the comment function over a list of Powers.
@@ -301,22 +309,21 @@ html
             li Destructuring
             li Strict management of state
 
-          aside
-            p Pure functions:
-            p Rely on no other inputs except the arguments
-            p Do not modify state outside the function
-            p Always return the same values for the same inputs
-            p So they are very easy to reason about and test
-            p No mocking, confugration
+        aside
+          p Pure functions:
+          p Rely on no other inputs except the arguments
+          p Do not modify state outside the function
+          p Always return the same values for the same inputs
+          p So they are very easy to reason about and test
+          p No mocking, confugration
 
 
       section
         .content
-          h2.bullet Language Features
+          h2 Language Features
           h4.bullet Pure Functions
           br
           h3.bullet Modularity
-          br
           pre.bullet
             code.elm
               | String.repeat: Int -> String -> String
@@ -332,8 +339,7 @@ html
         aside
           p Functions can be described entirely by the inputs and the body.
           p This means they don't need to be defined on an object/class.
-          p They are available as a module on a type.
-          p A lot of utility functions are exposed as part of a module, such as String and List.
+          p They can be exposed as part of a module, such as utility functions in String and List.
           p It's a good thing we don't have to depend on the npm padLeft module
           p String.foldl: takes a function that can take a char and a type of b and return a type of b,
           p an initial value of type b, and a string (which furnishes the chars) and returns the result of type b.
@@ -343,14 +349,67 @@ html
 
       section
         .content
-          h2.bullet Language Features
+          h2 Language Features
           h4.bullet Pure Functions
           br
-          h3.bullet Composability
+          h3.bullet Composability (Currying)
           br
           pre.bullet
             code.elm
+              | String.append
+              | -- &lt;function: append&gt; : String -> String -> String
+              | hail = String.append "Hail "
+              | -- &lt;function&gt; : String -> String
+              | List.map hail ["Hydra", "Thanos"]
+              | -- ["Hail Hydra","Hail Thanos"] : List String
 
+        aside
+          p Functions are curried.
+          p Providing fewer arguments than specified returns a function that can take the remaining arguments.
+          p The compiler infers the type of `hail` as `String -> String`.
+          p This allows passing partially applied functions to higher-order functions.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Pure Functions
+          br
+          h3.bullet Composability (Function Composition)
+          br
+          pre.bullet
+            code.elm
+              | List.map (String.append "Hulk " >> String.toUpper) ["smash", "eat", "jump" ]
+              | -- ["HULK SMASH","HULK EAT","HULK JUMP"] : List String
+              | List.map (String.append "Banner " << String.toLower) ["SMASH", "EAT", "JUMP" ]
+              | -- ["Banner smash","Banner eat","Banner jump"] : List String
+
+        aside
+          p Functions can be composed in both directions
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Pure Functions
+          br
+          h3.bullet Composability (Piping)
+          br
+          pre.bullet
+            code.elm
+              | "smash" |> String.append "Hulk " |> String.toUpper
+              | -- "HULK SMASH" : String
+          br
+          pre.bullet
+            code.elm
+              | ngon 4 75
+              | |> filled clearGrey
+              | |> move (-10,0)
+
+        aside
+          p Also known as chaining or threading in other languages.
+          p Functions can be piped in both directions as well.
+          p From the Elm examples, drawing a polygon is as simple as this.
 
 
       section
