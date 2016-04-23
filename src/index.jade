@@ -206,7 +206,7 @@ html
               |     predicate =
               |       case power of
               |         Throw name ->
-              |            "throw " ++ name
+              |           "throw " ++ name
               |         Run speed ->
               |           "run at " ++ (toString speed) ++ " minutes a mile"
               |         Shrink ->
@@ -234,7 +234,6 @@ html
           pre.bullet
             code.elm
               | List.map (comment "Ant-Man") [Throw "darts", Run 6, Shrink]
-              | 
               | {- ["Ant-Man can throw darts.",
               |     "Ant-Man can run at 6 minutes a mile.",
               |     "Ant-Man can shrink in size."] : List String -}
@@ -282,7 +281,6 @@ html
             li Modularity
             li Composability
             li Destructuring and Pattern Matching
-            li Strict management of state
 
         aside
           p Pure functions:
@@ -339,7 +337,7 @@ html
               | -- ["Hail Hydra","Hail Thanos"] : List String
 
         aside
-          p Functions are curried.
+          p Functions are curried. For example, String.append takes 2 args and appends the 2nd to the 1st.
           p Providing fewer arguments than specified returns a function that can take the remaining arguments.
           p The compiler infers the type of `hail` as `String -> String`.
           p This allows passing partially applied functions to higher-order functions.
@@ -392,19 +390,19 @@ html
           h2 Language Features
           h4.bullet Pure Functions
           br
-          h3.bullet Destructuring and Pattern Matching
+          h3.bullet Destructuring and Pattern Matching (Arguments)
           pre.bullet
             code.elm
-              | type alias Hero = { name: String, secret_identity: String }
+              | type alias Hero = { name: String, id: String }
               | 
               | classified_info: Hero -> String
               | classified_info {name, id} =
               |   id ++ " is " ++ name ++ "."
               | 
-              | iron_man = Hero "Iron Man" "Tony Stark"
+              | falcon = Hero "Falcon" "Sam Wilson"
               | 
               | classified_info iron_man
-              | -- "Tony Stark is Iron Man." : String
+              | -- "Sam Wilson is Falcon." : String
 
 
         aside
@@ -419,15 +417,98 @@ html
           h2 Language Features
           h4.bullet Pure Functions
           br
-          h3.bullet Destructuring and Pattern Matching
+          h3.bullet Destructuring and Pattern Matching (Content)
           pre.bullet
             code.elm
+              | length list =
+              |   case list of
+              |     [] -> 0
+              |     [_] -> 1
+              |     x::xs -> 1 + (length xs)
+          br
+          pre.bullet
+            code.elm
+              | team_cap = ["Ant-Man", "Scarlet Witch", "Hawkeye", "Falcon", "Winter Soldier"]
+              | length team_cap == List.length team_cap -- True : Bool
 
+        aside
+          p We saw examples of case destructuring earlier in the static type section.
+          p We go from specific to general matches so we can return early and accurately.
+          p Caution: `x::xs` will always match, and returns the head and rest of a list.
 
       section
         .content
           h2.bullet Language Features
           h4.bullet JavaScript Interoperability
+          br
+          h3.bullet Embedding
+
+          pre.bullet
+            code.elm Elm.fullscreen
+          br
+          pre.bullet
+            code.elm Elm.embed
+          br
+          pre.bullet
+            code.elm Elm.worker
+
+        aside
+          p The compiled output of `elm-make` is a JavaScript file that contains an `Elm` namespace object.
+          p These embedding functions provide Elm with the browser context where the elm program can run.
+          p They also return an instance of your app which you can use from the JS side to interact with.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet JavaScript Interoperability
+          br
+          h3.bullet Ports &mdash; JS as a Service
+          p.bullet Outgoing (Elm to JS)
+          pre.bullet
+            code.elm
+              | port tick: Signal Float
+              | port tick = every second
+          br
+          pre.bullet
+            code.javascript
+              | var myApp = Elm.fullscreen(Elm.MyApp);
+              | var callback = function (val) { // do something };
+              | myApp.ports.tick.subscribe(callback);
+              | myApp.ports.tick.unsubscribe(callback);
+
+        aside
+          p We'll talk more about Signals in a little bit, but think of them as a value that changes over time.
+          p `every second` is valid Elm code that creates a Signal that changes every second.
+          p Ports we create in our app are available in the ports object on the JS side.
+          p We can subscribe/unsubscribe to them using a callback.
+
+
+      section
+        .content
+          h2 Language Features
+          h4 JavaScript Interoperability
+          br
+          h3.bullet Ports &mdash; JS as a Service
+          p.bullet Incoming (JS to Elm)
+          pre.bullet
+            code.elm
+              | port new_hero: Signal Hero
+          br
+          pre.bullet
+            code.javascript
+              | superheroRegistrationApp.ports.new_hero.send({
+              |   name: "Peter Parker",
+              |   id: "Spider-Man"
+              | });
+
+        aside
+          p Ports without an implementation are assumed to be incoming ports.
+          p Values sent in from JS on these ports are also treated as Signals.
+          p The values are automatically converted into the types the port expects.
+          p Causes a JS error if we send in a value that can't be converted to the expected type.
+          p Can be used to model asynchronous interactions such as http calls.
+          p This is a much clearer boundary than ClojureScript, for example.
 
 
       section(data-bespoke-backdrop='elm')
