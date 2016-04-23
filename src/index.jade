@@ -515,27 +515,30 @@ html
         .content
           h1 Functional Reactive Programming (FRP) in Elm
 
+        aside
+          p We briefly saw one way how Signals work. Let's talk more about the why of them.
+          p FRP is first-class in Elm. Let's do a quick overview.
+
 
       section
         .content
-          h2 FRP in Elm
-          <br>
-          img.with-bg.bullet(src="/images/arch.png")
-          cite
+          h2.bullet FRP in Elm
+          img.with-bg.bullet(src="/images/arch.png" height="200")
+          cite.bullet
             a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
 
         aside
           p User actions, Ajax, time etc are streams of inputs to the system
           p App state is the result of transformations over time
-          p The view is a function of the app state
+          p The view is a function of the curent app state
+          p Updates to the state cause the view to react
 
 
       section
         .content
-          h2 FRP in Elm
-          <br>
-          img.with-bg.bullet(src="/images/signals.png")
-          cite
+          h2.bullet FRP in Elm
+          img.with-bg.bullet(src="/images/signals.png" height="200")
+          cite.bullet
             a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
 
         aside
@@ -545,6 +548,20 @@ html
           p The view reactively renders the new app state
           p This architecture is modular, or "fractal"
 
+
+      section
+        .content
+          h2.bullet FRP in Elm
+          h3.bullet Signals
+          img.bullet(src="/images/signals.gif" height="200")
+          cite.bullet
+            a(href="http://yang-wei.github.io/blog/2016/02/04/a-step-to-step-guide-to-elm-signal/") &ndash; Yang Wei's blog
+
+        aside
+          p The `clicks` Signal has a value whenever the mouse button is clicked.
+          p The `everySecond` signal is what we saw earlier, it has a value every second.
+          p `sampleOn` is a utility function in the Signal module.
+          p It contains the value from the 2nd signal whenever there's a value from the first.
 
 
     script(src='build/build.js')
