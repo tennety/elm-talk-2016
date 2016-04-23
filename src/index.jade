@@ -117,18 +117,6 @@ html
         .content
           h2 Language Features
           h4.bullet Static types
-          br
-          br
-          h1.bullet Example 1
-
-        aside
-          p Let's look at an example.
-
-
-      section
-        .content
-          h2 Language Features
-          h4.bullet Static types
           pre.bullet
             code.elm
               | longestNameLength: List String -> Maybe Int
@@ -158,19 +146,6 @@ html
         .content
           h3.bullet Doing this in JavaScript?
           img.bullet(src="/images/doc.png")
-
-
-      section
-        .content
-          h2 Language Features
-          h4.bullet Static types
-          br
-          br
-          h1.bullet Example 2
-
-        aside
-          p In the previous example, we encountered the Maybe type.
-          p Lets take a closer look at it.
 
 
       section
@@ -306,7 +281,7 @@ html
           ul
             li Modularity
             li Composability
-            li Destructuring
+            li Destructuring and Pattern Matching
             li Strict management of state
 
         aside
@@ -414,9 +389,45 @@ html
 
       section
         .content
+          h2 Language Features
+          h4.bullet Pure Functions
+          br
+          h3.bullet Destructuring and Pattern Matching
+          pre.bullet
+            code.elm
+              | type alias Hero = { name: String, secret_identity: String }
+              | 
+              | classified_info: Hero -> String
+              | classified_info {name, id} =
+              |   id ++ " is " ++ name ++ "."
+              | 
+              | iron_man = Hero "Iron Man" "Tony Stark"
+              | 
+              | classified_info iron_man
+              | -- "Tony Stark is Iron Man." : String
+
+
+        aside
+          p Some of the features of the various data structures we talked about earlier come in useful here.
+          p A Type Alias gives us a shorthand for a more lengthy type annotation, with type checks.
+          p It also gives us a constructor function for free.
+          p There is a proposal out there for doing string interpolation in Elm. For now, we concat.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Pure Functions
+          br
+          h3.bullet Destructuring and Pattern Matching
+          pre.bullet
+            code.elm
+
+
+      section
+        .content
           h2.bullet Language Features
           h4.bullet JavaScript Interoperability
-
 
 
       section(data-bespoke-backdrop='elm')
