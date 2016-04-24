@@ -6,6 +6,7 @@ html
     title Elm or FUD
 
     link(rel='stylesheet', type='text/css', href='build/build.css')
+    script(src='build/src/elm.js')
 
   body
 
@@ -516,8 +517,30 @@ html
           h1 Functional Reactive Programming (FRP) in Elm
 
         aside
-          p We briefly saw one way how Signals work. Let's talk more about the why of them.
           p FRP is first-class in Elm. Let's do a quick overview.
+          p We briefly saw one way how Signals work. Let's talk more about the why of them.
+
+
+      section
+        .content
+          h2.bullet FRP in Elm
+          h3.bullet Signals
+          img.bullet(src="/images/signals.gif" height="200")
+          cite.bullet
+            a(href="http://yang-wei.github.io/elmflux/") &ndash; Yang Wei's Visualization
+
+        aside
+          p The `clicks` Signal has a value whenever the mouse button is clicked.
+          p The `everySecond` signal is what we saw earlier, it has a value every second.
+          p `sampleOn` is a utility function in the Signal module.
+          p It contains the value from the 2nd signal whenever there's a value from the first.
+
+
+      section
+        .content
+          h2 FRP in Elm
+          h3.bullet Signals &mdash; Demo
+          #demo
 
 
       section
@@ -549,19 +572,26 @@ html
           p This architecture is modular, or "fractal"
 
 
-      section
-        .content
-          h2.bullet FRP in Elm
-          h3.bullet Signals
-          img.bullet(src="/images/signals.gif" height="200")
-          cite.bullet
-            a(href="http://yang-wei.github.io/blog/2016/02/04/a-step-to-step-guide-to-elm-signal/") &ndash; Yang Wei's blog
-
-        aside
-          p The `clicks` Signal has a value whenever the mouse button is clicked.
-          p The `everySecond` signal is what we saw earlier, it has a value every second.
-          p `sampleOn` is a utility function in the Signal module.
-          p It contains the value from the 2nd signal whenever there's a value from the first.
-
+      // Detected errors in 1 module.
+      // ==================================== ERRORS ====================================
+      //
+      // -- TYPE MISMATCH --------------------------------------------------- Signals.elm
+      //
+      // The argument to function `text` is causing a mismatch.
+      //
+      // 6│   Html.text Mouse.position
+      //                ^^^^^^^^^^^^^^
+      // Function `text` is expecting the argument to be:
+      //
+      //     String
+      //
+      // But it is:
+      //
+      //     Signal ( Int, Int )
 
     script(src='build/build.js')
+
+    script(type='text/javascript')
+      | var div = document.getElementById("demo");
+      | Elm.embed(Elm.Signals, div);
+

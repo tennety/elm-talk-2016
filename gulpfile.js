@@ -12,6 +12,7 @@ var pkg = require('./package.json'),
   stylus = require('gulp-stylus'),
   autoprefixer = require('gulp-autoprefixer'),
   csso = require('gulp-csso'),
+  copy = require('gulp-copy'),
   pdf = require('bespoke-pdf'),
   del = require('del'),
   through = require('through'),
@@ -21,7 +22,8 @@ var pkg = require('./package.json'),
   sync = require('bespoke-sync/server'),
   isDist = process.argv.indexOf('serve') === -1;
 
-gulp.task('js', ['clean:js'], function() {
+
+gulp.task('js', ['clean:js', 'copy:elm'], function() {
   return gulp.src('src/scripts/main.js')
     .pipe(isDist ? through() : plumber())
     .pipe(browserify({ transform: ['debowerify'], debug: !isDist }))
@@ -64,6 +66,11 @@ gulp.task('images', ['clean:images'], function() {
 gulp.task('pdf', ['connect'], function () {
   return pdf(pkg.name + '.pdf')
     .pipe(gulp.dest('pdf'));
+});
+
+gulp.task('copy:elm', function () {
+  return gulp.src('src/elm.js')
+    .pipe(copy('dist/build'));
 });
 
 gulp.task('clean', function(done) {
