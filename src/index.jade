@@ -525,9 +525,10 @@ html
         .content
           h2.bullet FRP in Elm
           h3.bullet Signals
-          img.bullet(src="/images/signals.gif" height="200")
-          cite.bullet
-            a(href="http://yang-wei.github.io/elmflux/") &ndash; Yang Wei's Visualization
+          div.bullet
+            img(src="/images/signals.gif" height="200")
+            cite
+              a(href="http://yang-wei.github.io/elmflux/") &ndash; Yang Wei's Visualization
 
         aside
           p The `clicks` Signal has a value whenever the mouse button is clicked.
@@ -539,16 +540,22 @@ html
       section
         .content
           h2 FRP in Elm
-          h3.bullet Signals &mdash; Demo
-          #demo
+          h3.bullet Signals Demo &mdash; Mouse Position
+          pre.bullet
+            code.elm
+              | main =
+              |   Signal.map (Html.text << toString) Mouse.position
+          br
+          #mouse-demo.demo.bullet
 
 
       section
         .content
           h2.bullet FRP in Elm
-          img.with-bg.bullet(src="/images/arch.png" height="200")
-          cite.bullet
-            a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
+          div.bullet
+            img.with-bg(src="/images/arch.png" height="350")
+            cite
+              a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
 
         aside
           p User actions, Ajax, time etc are streams of inputs to the system
@@ -560,9 +567,10 @@ html
       section
         .content
           h2.bullet FRP in Elm
-          img.with-bg.bullet(src="/images/signals.png" height="200")
-          cite.bullet
-            a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
+          div.bullet
+            img.with-bg(src="/images/signals.png" height="350")
+            cite
+              a(href="http://elm-lang.org/guide/reactivity") &ndash; elm-lang.org
 
         aside
           p The central `foldp` is responsible for maintaining the app state across the different input streams.
@@ -570,6 +578,73 @@ html
           p The updates are folded over the app state to generate new state
           p The view reactively renders the new app state
           p This architecture is modular, or "fractal"
+
+
+      section
+        .content
+          h2 FRP in Elm
+          h3.bullet Signal.foldp Demo &mdash; Simple Timer
+          pre.bullet
+            code.elm
+              | input =
+              |   Signal.foldp (\dt t -> t + 1) 0 (every second)
+              | 
+              | main =
+              |   Signal.map (Html.text << toString) input
+          br
+          #timer.demo.bullet
+
+        aside
+          p The `foldp` has a very similar signature to a reduce or inject.
+          p It takes an initial value, and a function that reduces the values passed in.
+          p As the input Signal sends in new values, the foldp returns the accumulated value as a Signal.
+          p This pattern is used in the Elm Architecture to transform application state.
+          p Usually, an Elm program has a single foldp that takes a model and an update function and returns a new model.
+          p The view then simply renders the model as it changes into a virtual dom.
+          p The `virtual-dom` library then takes care of updating the actual dom.
+          p Lets break the timer example into a simple Model-View-Update pattern.
+
+
+      section
+        .content
+          h2 FRP in Elm
+          h3.bullet Signal.foldp Demo &mdash; Simple Timer
+          pre.bullet
+            code.elm
+              | type alias Model = Int
+              | model = 0
+          pre.bullet
+            code.elm
+              | update: Float -> Model -> Model
+              | update _ model =
+              |   model + 1
+          pre.bullet
+            code.elm
+              | view: Model -> Html
+              | view model =
+              |   model
+              |     |> toString
+              |     |> Html.text
+          pre.bullet
+            code.elm
+              | main: Signal Html
+              | main =
+              |   Signal.map view (Signal.foldp update model (every second))
+
+        aside
+          p This makes Elm apps very modular. Each component is either a value or a function.
+          p Communication happens via Signals, which abstract away mutations.
+          p In fact, it works so well that there's a StartApp library
+          p which allows simple UIs to be written only as Model/View/Update,
+          p and the Signals are entirely hidden.
+          p For more detail, go through the Elm Architecture Tutorial.
+          p Even if you don't care about Elm, that article has some awesome ideas.
+
+
+      section(data-bespoke-backdrop='elm')
+        .content
+          h1 Compiler Features
+
 
 
       // Detected errors in 1 module.
@@ -592,6 +667,8 @@ html
     script(src='build/build.js')
 
     script(type='text/javascript')
-      | var div = document.getElementById("demo");
-      | Elm.embed(Elm.Signals, div);
+      | var div = document.getElementById("mouse-demo");
+      | Elm.embed(Elm.MouseDemo, div);
+      | var div = document.getElementById("timer");
+      | Elm.embed(Elm.Timer, div);
 

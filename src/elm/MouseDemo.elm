@@ -1,4 +1,4 @@
-module Signals where
+module MouseDemo where
 
 import Html exposing (..)
 import Mouse exposing (..)
