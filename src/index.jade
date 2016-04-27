@@ -524,7 +524,7 @@ html
       section
         .content
           h2.bullet FRP in Elm
-          h3.bullet Signals
+          h4.bullet Signals
           div.bullet
             img(src="/images/signals.gif" height="200")
             cite
@@ -540,7 +540,7 @@ html
       section
         .content
           h2 FRP in Elm
-          h3.bullet Signals Demo &mdash; Mouse Position
+          h4.bullet Signals Demo &mdash; Mouse Position
           pre.bullet
             code.elm
               | main =
@@ -583,7 +583,7 @@ html
       section
         .content
           h2 FRP in Elm
-          h3.bullet Signal.foldp Demo &mdash; Simple Timer
+          h4.bullet Signal.foldp Demo &mdash; Simple Timer
           pre.bullet
             code.elm
               | input =
@@ -608,7 +608,7 @@ html
       section
         .content
           h2 FRP in Elm
-          h3.bullet Signal.foldp Demo &mdash; Simple Timer
+          h4.bullet Signal.foldp Demo &mdash; Simple Timer
           pre.bullet
             code.elm
               | type alias Model = Int
@@ -646,23 +646,228 @@ html
           h1 Compiler Features
 
 
+      section
+        .content
+          h2.bullet Compiler Features
+          h4.bullet Error Location
 
-      // Detected errors in 1 module.
-      // ==================================== ERRORS ====================================
-      //
-      // -- TYPE MISMATCH --------------------------------------------------- Signals.elm
-      //
-      // The argument to function `text` is causing a mismatch.
-      //
-      // 6│   Html.text Mouse.position
-      //                ^^^^^^^^^^^^^^
-      // Function `text` is expecting the argument to be:
-      //
-      //     String
-      //
-      // But it is:
-      //
-      //     Signal ( Int, Int )
+          pre.bullet
+            code.elm
+              | -- NAMING ERROR ---------------------------------------------- repl-temp-000.elm
+              | 
+              | Cannot find variable `List.nap`.
+              | 
+              | 4│   List.nap String.toUpper ["foo"]
+              |      ^^^^^^^^
+              | ...truncated...
+
+        aside
+          p No more digging around to find where the offending code is, or what it looks like.
+
+
+      section
+        .content
+          h2 Compiler Features
+          h4.bullet Helpful Hints
+
+          pre.bullet
+            code.elm
+              | `List` does not expose `nap`. Maybe you want one of the following?
+              | 
+              |     List.map
+              |     List.any
+              |     List.map2
+              |     List.map3
+        aside
+          p Suggestions based on what you were trying to accomplish.
+
+
+
+      section
+        .content
+          h2 Compiler Features
+          h4.bullet Type Mismatches
+
+          pre.bullet
+            code.elm
+              |  -- TYPE MISMATCH --------------------------------------------------- Signals.elm
+              | 
+              |  The argument to function `text` is causing a mismatch.
+              | 
+              |  6│   Html.text Mouse.position
+              |                 ^^^^^^^^^^^^^^
+              |  Function `text` is expecting the argument to be:
+              | 
+              |      String
+              | 
+              |  But it is:
+              | 
+              |      Signal ( Int, Int )
+
+        aside
+          p This is an error I got while building the Mouse Position demo.
+          p As we saw, Mouse.position is a Signal of a tuple of 2 integers,
+          p which I wanted to display as Html.
+          p This error is telling me that I was wrongly expecting to display static text,
+          p when I was actually getting a Signal.
+          p As we saw, I had to Signal.map converting the mouse signal into text and then html.
+
+
+      section
+        .content
+          h2 Compiler Features
+          h4.bullet Missing Patterns
+          pre.bullet
+            code.elm
+              | -- MISSING PATTERNS ------------------------------------------ repl-temp-000.elm
+              | 
+              | This `case` does not have branches for all possibilities.
+              | 
+              | 5│>  case list of
+              | 6│>    [_] -> 1
+              | 7│>    x::xs -> 1 + (length xs)
+              | 
+              | You need to account for the following values:
+              | 
+              |     []
+              | 
+              | Add a branch to cover this pattern!
+
+        aside
+          p This was from the hand-rolled `length` example I showed earlier.
+          p The compiler is telling me that I did not account for the empty list scenario!
+          p How easy is it to run into this in JavaScript?
+
+
+      section
+        .content
+          h2 Compiler Features
+          h4.bullet Beginner-friendly Hints
+          div.bullet
+            p Like this one:
+            pre.bullet
+              | Hint: Elm does not have "truthiness" such that ints and strings
+              | and lists are automatically converted to booleans. Do that
+              | conversion explicitly.
+          br
+          div.bullet
+            p Or this:
+            pre.bullet
+              | If you are seeing this error for the first time, check out
+              | these hints:
+              | &lt;https://github.com/elm-lang/elm-compiler/blob/0.16.0/hints/missing-patterns.md&gt;
+              | The recommendations about wildcard patterns and `Debug.crash`
+              | are important!
+
+        aside
+          p The errors have additional hints targeted at novice users.
+          p "Unlike JavaScript" being the implication here...
+          p The compiler will also sometimes point you to where you can find further info.
+
+
+      section
+        .content
+          h2 Compiler Features
+
+          a(href="https://github.com/elm-lang/error-message-catalog") Elm Error Message Catalog
+          br
+          br
+          img.with-bg(src="/images/error-catalog.png")
+
+        aside
+          p This is an open-source project that accepts contributions with every possible error in Elm
+          p with the intention of building more meaningful error messages to help in each situation.
+
+
+      section(data-bespoke-backdrop='elm')
+        .content
+          h1 Community
+
+
+      section
+        .content
+          h2 Community
+          h4.bullet Packages
+          br
+          h3.bullet elm-package
+          ul
+            li Install packages
+            li Publish packages
+            li Detect API changes...
+            li ...and enforce Semver
+
+        aside
+          p Elm comes with a package manager called elm-package.
+          p Run `elm package diff` to see the changes between versions.
+          p Run `elm package bump` to automatically update the version number when publishing.
+
+
+      section
+        .content
+          h2 Community
+          h4.bullet Packages
+          h3 Elm Core
+          ul
+            li Basics (Comparison, Booleans, Math, etc)
+            li Data Structures
+            li Signals
+
+
+      section
+        .content
+          h2 Community
+          h4.bullet Packages
+          h3 Over 200 contributed packages
+
+
+      section
+        .content
+          h2 Community
+          h4.bullet Google Groups
+          ul
+            li elm-discuss
+            li elm-dev
+
+        aside
+          p elm-discuss is good for any kind of discussion. People are friendly and helpful.
+          p elm-dev is for coordinating open-source work.
+
+
+      section
+        .content
+          h2 Community
+          h4.bullet Social
+          ul
+            li
+              a(href="http://webchat.freenode.net/?channels=elm") #elm on IRC
+            li
+              a(href="http://elmlang.herokuapp.com/") Elm Slack
+            li
+              a(href="https://twitter.com/elmlang") ElmLang on Twitter
+            li
+              a(href="http://github.com/elm-lang") Github Org
+
+        aside
+          p I haven't been on IRC, but the slack room is great. You know you want another slack room!
+
+
+      section(data-bespoke-backdrop='elm')
+        .content
+          h1 Future of Elm
+
+
+      section
+        .content
+          h2 Future of Elm
+          h4.bullet Oh the places you'll go!
+          ul
+            li
+              a(href="http://elm-lang.org/blog/new-adventures-for-elm") Elm Software Foundation
+            li
+              a(href="https://github.com/elm-native-ui/elm-native-ui") Elm Native UI
+            li
+              a(href="https://github.com/NoRedInk/take-home") Elm on the server
+
 
     script(src='build/build.js')
 
