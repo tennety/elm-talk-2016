@@ -46,32 +46,24 @@ html
 
       section
         .content
-          img.bullet(src="/images/elmer-iron-man.jpg")
-
-        aside
-          p Elm turns us into Iron Man.
-
-
-      section
-        .content
           h2 Why Elm?
           h3.bullet ...and why should I care?
           br
           ul
             li Fully functional, compile-to-JS
-            li Zealously helpful compiler
             li Built for reactive UIs, supports FRP out of the box
+            li Zealously helpful compiler
             li Approachable, friendly community
 
         aside
           p We'll talk about more language features (and how they help) in a bit.
-          p Helpful error messages, diffs, hints...like, <em>really</em> helpful.
           p HTML/CSS, Canvas, Native?
+          p Helpful error messages, diffs, hints...like, <em>really</em> helpful.
           p This is the best part. Slack channel, github, google groups.
           p Let's go over each in more detail.
 
 
-      // FEATURES
+      // LANGUAGE FEATURES
       section(data-bespoke-backdrop='elm')
         .content
           h1 Language Features
@@ -442,7 +434,7 @@ html
           h2.bullet Language Features
           h4.bullet JavaScript Interoperability
           br
-          h3.bullet Embedding
+          h3.bullet Embedding in HTML
 
           pre.bullet
             code.elm Elm.fullscreen
@@ -462,10 +454,9 @@ html
       section
         .content
           h2 Language Features
-          h4.bullet JavaScript Interoperability
+          h4.bullet JavaScript Interoperability &mdash; Ports
           br
-          h3.bullet Ports &mdash; JS as a Service
-          p.bullet Outgoing (Elm to JS)
+          h3.bullet Outgoing (Elm to JS)
           pre.bullet
             code.elm
               | port tick: Signal Float
@@ -479,6 +470,7 @@ html
               | myApp.ports.tick.unsubscribe(callback);
 
         aside
+          p Ports are Elm's JavaScript as a service. They allow tightly controlled communication with the host platform.
           p We'll talk more about Signals in a little bit, but think of them as a value that changes over time.
           p `every second` is valid Elm code that creates a Signal that changes every second.
           p Ports we create in our app are available in the ports object on the JS side.
@@ -488,10 +480,9 @@ html
       section
         .content
           h2 Language Features
-          h4 JavaScript Interoperability
+          h4.bullet JavaScript Interoperability &mdash; Ports
           br
-          h3.bullet Ports &mdash; JS as a Service
-          p.bullet Incoming (JS to Elm)
+          h3.bullet Incoming (JS to Elm)
           pre.bullet
             code.elm
               | port new_hero: Signal Hero
@@ -512,6 +503,7 @@ html
           p This is a much clearer boundary than ClojureScript, for example.
 
 
+      // ELM FRP
       section(data-bespoke-backdrop='elm')
         .content
           h1 Functional Reactive Programming (FRP) in Elm
@@ -523,7 +515,7 @@ html
 
       section
         .content
-          h2.bullet FRP in Elm
+          h2 FRP in Elm
           h4.bullet Signals
           div.bullet
             img(src="/images/signals.gif" height="200")
@@ -641,6 +633,7 @@ html
           p Even if you don't care about Elm, that article has some awesome ideas.
 
 
+      // COMPILER FEATURES
       section(data-bespoke-backdrop='elm')
         .content
           h1 Compiler Features
@@ -779,6 +772,7 @@ html
           p with the intention of building more meaningful error messages to help in each situation.
 
 
+      // COMMUNITY
       section(data-bespoke-backdrop='elm')
         .content
           h1 Community
@@ -851,6 +845,7 @@ html
           p I haven't been on IRC, but the slack room is great. You know you want another slack room!
 
 
+      // FUTURE
       section(data-bespoke-backdrop='elm')
         .content
           h1 Future of Elm
@@ -867,6 +862,23 @@ html
               a(href="https://github.com/elm-native-ui/elm-native-ui") Elm Native UI
             li
               a(href="https://github.com/NoRedInk/take-home") Elm on the server
+
+
+      // CONCLUSION
+      section
+        .content
+          img.bullet(src="/images/elmer.png")
+
+        aside
+          p In conclusion, remember this? How we JS programmers are like Elmer Fudd? Well...
+
+
+      section
+        .content
+          img.bullet(src="/images/elmer-iron-man.jpg")
+
+        aside
+          p Elm turns us into Iron Man.
 
 
     script(src='build/build.js')
