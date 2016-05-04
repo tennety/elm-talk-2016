@@ -378,12 +378,10 @@ html
               | String.repeat: Int -> String -> String
               | String.padLeft: Int -> Char -> String -> String
               | String.foldl: (Char -> b -> b) -> b -> String -> b
-              | > foldl cons "" "time" == "emit"
               | 
               | List.member: a -> List a -> Bool
               | List.intersperse: a -> List a -> List a
               | List.scanl: (a -> b -> b) -> b -> List a -> List b
-              | > scanl (+) 0 [1,2,3,4] == [0,1,3,6,10]
 
         aside
           p Functions can be described entirely by the inputs and the body.
@@ -407,8 +405,10 @@ html
             code.elm
               | String.append
               | -- &lt;function: append&gt; : String -> String -> String
+              | 
               | hail = String.append "Hail "
               | -- &lt;function&gt; : String -> String
+              | 
               | List.map hail ["Hydra", "Thanos"]
               | -- ["Hail Hydra","Hail Thanos"] : List String
 
@@ -430,6 +430,7 @@ html
             code.elm
               | List.map (String.append "Hulk " >> String.toUpper) ["smash", "eat", "jump" ]
               | -- ["HULK SMASH","HULK EAT","HULK JUMP"] : List String
+              | 
               | List.map (String.append "Banner " << String.toLower) ["SMASH", "EAT", "JUMP" ]
               | -- ["Banner smash","Banner eat","Banner jump"] : List String
 
@@ -446,7 +447,7 @@ html
           br
           pre.bullet
             code.elm
-              | "smash" |> String.append "Hulk " |> String.toUpper
+              | String.toUpper <| String.append "Hulk " <| "smash"
               | -- "HULK SMASH" : String
           br
           pre.bullet
@@ -717,145 +718,6 @@ html
           p Even if you don't care about Elm, that article has some awesome ideas.
 
 
-      // COMPILER FEATURES
-      section(data-bespoke-backdrop='elm')
-        .content
-          h1 Compiler Features
-
-
-      section
-        .content
-          h2.bullet Compiler Features
-          h4.bullet Error Location
-
-          pre.bullet
-            code.elm
-              | -- NAMING ERROR ---------------------------------------------- repl-temp-000.elm
-              | 
-              | Cannot find variable `List.nap`.
-              | 
-              | 4│   List.nap String.toUpper ["foo"]
-              |      ^^^^^^^^
-              | ...truncated...
-
-        aside
-          p No more digging around to find where the offending code is, or what it looks like.
-
-
-      section
-        .content
-          h2 Compiler Features
-          h4.bullet Helpful Hints
-
-          pre.bullet
-            code.elm
-              | `List` does not expose `nap`. Maybe you want one of the following?
-              | 
-              |     List.map
-              |     List.any
-              |     List.map2
-              |     List.map3
-        aside
-          p Suggestions based on what you were trying to accomplish.
-
-
-
-      section
-        .content
-          h2 Compiler Features
-          h4.bullet Type Mismatches
-
-          pre.bullet
-            code.elm
-              |  -- TYPE MISMATCH --------------------------------------------------- Signals.elm
-              | 
-              |  The argument to function `text` is causing a mismatch.
-              | 
-              |  6│   Html.text Mouse.position
-              |                 ^^^^^^^^^^^^^^
-              |  Function `text` is expecting the argument to be:
-              | 
-              |      String
-              | 
-              |  But it is:
-              | 
-              |      Signal ( Int, Int )
-
-        aside
-          p This is an error I got while building the Mouse Position demo.
-          p As we saw, Mouse.position is a Signal of a tuple of 2 integers,
-          p which I wanted to display as Html.
-          p This error is telling me that I was wrongly expecting to display static text,
-          p when I was actually getting a Signal.
-          p As we saw, I had to Signal.map converting the mouse signal into text and then html.
-
-
-      section
-        .content
-          h2 Compiler Features
-          h4.bullet Missing Patterns
-          pre.bullet
-            code.elm
-              | -- MISSING PATTERNS ------------------------------------------ repl-temp-000.elm
-              | 
-              | This `case` does not have branches for all possibilities.
-              | 
-              | 5│>  case list of
-              | 6│>    [_] -> 1
-              | 7│>    x::xs -> 1 + (length xs)
-              | 
-              | You need to account for the following values:
-              | 
-              |     []
-              | 
-              | Add a branch to cover this pattern!
-
-        aside
-          p This was from the hand-rolled `length` example I showed earlier.
-          p The compiler is telling me that I did not account for the empty list scenario!
-          p How easy is it to run into this in JavaScript?
-
-
-      section
-        .content
-          h2 Compiler Features
-          h4.bullet Beginner-friendly Hints
-          div.bullet
-            p Like this one:
-            pre.bullet
-              | Hint: Elm does not have "truthiness" such that ints and strings
-              | and lists are automatically converted to booleans. Do that
-              | conversion explicitly.
-          br
-          div.bullet
-            p Or this:
-            pre.bullet
-              | If you are seeing this error for the first time, check out
-              | these hints:
-              | &lt;https://github.com/elm-lang/elm-compiler/blob/0.16.0/hints/missing-patterns.md&gt;
-              | The recommendations about wildcard patterns and `Debug.crash`
-              | are important!
-
-        aside
-          p The errors have additional hints targeted at novice users.
-          p "Unlike JavaScript" being the implication here...
-          p The compiler will also sometimes point you to where you can find further info.
-
-
-      section
-        .content
-          h2 Compiler Features
-
-          a(href="https://github.com/elm-lang/error-message-catalog") Elm Error Message Catalog
-          br
-          br
-          img.with-bg(src="/images/error-catalog.png")
-
-        aside
-          p This is an open-source project that accepts contributions with every possible error in Elm
-          p with the intention of building more meaningful error messages to help in each situation.
-
-
       // COMMUNITY
       section(data-bespoke-backdrop='elm')
         .content
@@ -927,6 +789,20 @@ html
 
         aside
           p I haven't been on IRC, but the slack room is great. You know you want another slack room!
+
+
+      section
+        .content
+          h2 Community
+
+          a(href="https://github.com/elm-lang/error-message-catalog") Elm Error Message Catalog
+          br
+          br
+          img.with-bg(src="/images/error-catalog.png")
+
+        aside
+          p This is an open-source project that accepts contributions with every possible error in Elm
+          p with the intention of building more meaningful error messages to help in each situation.
 
 
       // FUTURE
