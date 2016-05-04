@@ -17,7 +17,12 @@
 
 pre {
   overflow: scroll;
-  font-size: smaller;
+  font-size: initial;
+
+  &.error {
+    max-height: 400px;
+    line-height: 1;
+  }
 }
 
 code.hljs {

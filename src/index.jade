@@ -72,19 +72,13 @@ html
       section
         .content
           h2.bullet Language Features
-          br
-          br
-          ul
-            li Static types
-            li Immutable data structures
-            li Pure functions
-            li JS interoperability
+          h3.bullet Static types
+          h3.bullet Immutable data structures
+          h3.bullet Pure functions
+          h3.bullet JS interoperability
 
         aside
-          p Static typing provides guarantees that help eliminate a whole class of runtime errors.
-          p Immutability guarantees referential transparency and that a set of data transformations always returns the same results.
-          p Pure functions allow fast reasoning without worrying about side effects to the state.
-          p Interop allows powerful yet controlled access to the native/host environment
+          p We'll cover 4 broad areas with examples.
 
 
       section
@@ -103,6 +97,7 @@ html
           p But there's a distinction between types (or classes and interfaces) in Java and types in functional languages.
           p Types in Elm serve to define <em>contracts</em> between functions and the data they work with.
           p These contracts let the compiler guide you away from ever letting bad data in.
+          p Static typing provides guarantees that help eliminate a whole class of runtime errors.
           p This has less to do with VM optimization, and more with helping the programmer work with a smaller mental overhead.
 
 
@@ -122,17 +117,73 @@ html
               | -- Just 8 : Maybe.Maybe Int
             code.bullet.elm
               | longestNameLength [] -- Nothing : Maybe.Maybe Int
-            code.bullet.elm
-              | longestNameLength [1, 2] -- Compile error
-            code.bullet.elm
-              | longestNameLength ["Peter", 2] -- Compile error
 
         aside
           p The type annotation is optional, Elm can infer the input and output types
           p The Maybe type kills null. The function explicitly tells you it may return Nothing, so you <em>have</em> to handle it.
-          p Our function expects a List of Strings, because only then can it successfully call String.length on the List.
-          p Giving it other types in the List causes compile errors.
           p List's `head` and `tail` functions return Maybes to deal with empty lists.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          pre.bullet
+            code.elm
+              | longestNameLength [1, 2]
+          pre.bullet.error
+            code.elm
+              | -- TYPE MISMATCH --------------------------------------------- repl-temp-000.elm
+              | 
+              | The argument to function `longestNameLength` is causing a mismatch.
+              | 
+              | 4│   longestNameLength [1, 2]
+              |                        ^^^^^^
+              | Function `longestNameLength` is expecting the argument to be:
+              | 
+              |     List String
+              | 
+              | But it is:
+              | 
+              |     List number
+
+        aside
+          p Our function expects a List of Strings, because only then can it successfully call String.length on the List.
+          p Giving it a List of other types causes this compile error.
+          p Observe how clear the compiler output is. It tells you exactly where the error is,
+          p what it looks like, what is expected and what the difference is. No more wall of text.
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          pre.bullet
+            code.elm
+              | longestNameLength ["Peter", 2]
+          pre.bullet.error
+            code.elm
+              | -- TYPE MISMATCH --------------------------------------------- repl-temp-000.elm
+              | The 1st and 2nd elements are different types of values.
+              | 
+              | 4│       ["Peter", 2]
+              |                    ^
+              | The 1st element has this type:
+              | 
+              |     String
+              | 
+              | But the 2nd is:
+              | 
+              |     number
+              | 
+              | Hint: All elements should be the same type of value so that we can iterate
+              | through the list without running into unexpected values.
+
+        aside
+          p Again, if we try to create a List of mixed types, the compiler short circuits even sooner.
+          p This time, it even supplies a useful hint, explaining why this expectation is useful.
+          p As a result, by the time we use the longestNameLength function in production,
+          p the only values it's guaranteed to get is either a list of strings, or an empty list.
+
 
 
       section
@@ -163,7 +214,37 @@ html
           p Static types give us powerful ways of working with expectations.
           p This is different from OOP land, where you may expect a subclass or check if an object responds to a method.
           p Maybe here is an example of a Union Type or Tagged Union, where the type can carry additional values.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet Static types
+          br
+          pre.bullet.error
+            code.elm
+              | -- MISSING PATTERNS ------------------------------------------ repl-temp-000.elm
+              | 
+              | This `case` does not have branches for all possibilities.
+              | 
+              | 7│>  case length of
+              | 8|>    Just num ->
+              | 9|>      "The longest name is " ++ (toString num) ++ " characters."
+              | 
+              | You need to account for the following values:
+              | 
+              |     Maybe.Nothing
+              | 
+              | Add a branch to cover this pattern!
+              | 
+              | If you are seeing this error for the first time, check out these hints:
+              | &lt;https://github.com/elm-lang/elm-compiler/blob/0.16.0/hints/missing-patterns.md&gt;
+              | The recommendations about wildcard patterns and `Debug.crash` are important!
+
+        aside
           p As soon as the compiler sees the case, it will not let you terminate it without handling all possible values of the type.
+          p Had we neglected the Nothing case, here's the error we would see.
+          p Again, notice the clarity of the message, and the helpful further reading at the bottom.
 
 
       section
@@ -257,6 +338,7 @@ html
             li Records and Tuples
 
         aside
+          p Immutability guarantees referential transparency and that a set of data transformations always returns the same results.
           p We've already looked at lists. Arrays are built for positional access.
           p Sets are ideal for set operations.
           p Dictionaries are like hashes, a list of key-value pairs.
@@ -276,6 +358,7 @@ html
             li Destructuring and Pattern Matching
 
         aside
+          p Pure functions allow fast reasoning without worrying about side effects to the state.
           p Pure functions:
           p Rely on no other inputs except the arguments
           p Do not modify state outside the function
@@ -394,7 +477,7 @@ html
               | 
               | falcon = Hero "Falcon" "Sam Wilson"
               | 
-              | classified_info iron_man
+              | classified_info falcon
               | -- "Sam Wilson is Falcon." : String
 
 
@@ -422,7 +505,7 @@ html
           pre.bullet
             code.elm
               | team_cap = ["Ant-Man", "Scarlet Witch", "Hawkeye", "Falcon", "Winter Soldier"]
-              | length team_cap == List.length team_cap -- True : Bool
+              | length team_cap == List.length team_cap -- 5 : Int
 
         aside
           p We saw examples of case destructuring earlier in the static type section.
@@ -446,6 +529,7 @@ html
             code.elm Elm.worker
 
         aside
+          p Interop allows powerful yet controlled access to the native/host environment
           p The compiled output of `elm-make` is a JavaScript file that contains an `Elm` namespace object.
           p These embedding functions provide Elm with the browser context where the elm program can run.
           p They also return an instance of your app which you can use from the JS side to interact with.
@@ -518,7 +602,7 @@ html
           h2 FRP in Elm
           h4.bullet Signals
           div.bullet
-            img(src="/images/signals.gif" height="200")
+            img(src="/images/signals.gif" height="350")
             cite
               a(href="http://yang-wei.github.io/elmflux/") &ndash; Yang Wei's Visualization
 
