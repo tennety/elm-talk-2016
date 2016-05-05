@@ -10386,6 +10386,30 @@ Elm.MouseDemo.make = function (_elm) {
    var main = A2($Signal.map,function (_p0) {    return $Html.text($Basics.toString(_p0));},$Mouse.position);
    return _elm.MouseDemo.values = {_op: _op,main: main};
 };
+Elm.PortsDemo = Elm.PortsDemo || {};
+Elm.PortsDemo.make = function (_elm) {
+   "use strict";
+   _elm.PortsDemo = _elm.PortsDemo || {};
+   if (_elm.PortsDemo.values) return _elm.PortsDemo.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var message = Elm.Native.Port.make(_elm).inboundSignal("message",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
+   });
+   var main = A2($Signal.map,$Html.text,message);
+   var tick = Elm.Native.Port.make(_elm).outboundSignal("tick",function (v) {    return v;},$Time.every($Time.second));
+   return _elm.PortsDemo.values = {_op: _op,main: main};
+};
 Elm.Timer = Elm.Timer || {};
 Elm.Timer.make = function (_elm) {
    "use strict";
@@ -10401,9 +10425,7 @@ Elm.Timer.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
-   var view = function (model) {    return $Html.text($Basics.toString(model));};
-   var update = F2(function (_p0,model) {    return model + 1;});
-   var model = 0;
-   var main = A2($Signal.map,view,A3($Signal.foldp,update,model,$Time.every($Time.second)));
-   return _elm.Timer.values = {_op: _op,model: model,update: update,view: view,main: main};
+   var input = A3($Signal.foldp,F2(function (_p0,t) {    return t + 1;}),0,$Time.every($Time.second));
+   var main = A2($Signal.map,function (_p1) {    return $Html.text($Basics.toString(_p1));},input);
+   return _elm.Timer.values = {_op: _op,input: input,main: main};
 };

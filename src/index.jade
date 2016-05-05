@@ -203,7 +203,7 @@ html
           pre.bullet
             code.elm
               | message: Maybe Int -> String
-              | message length =
+              | message maybeLength =
               |   case length of
               |     Just num ->
               |       "The longest name is " ++ (toString num) ++ " characters."
@@ -550,9 +550,8 @@ html
           pre.bullet
             code.javascript
               | var myApp = Elm.fullscreen(Elm.MyApp);
-              | var callback = function (val) { // do something };
-              | myApp.ports.tick.subscribe(callback);
-              | myApp.ports.tick.unsubscribe(callback);
+              | myApp.ports.tick.subscribe(console.log);
+              | myApp.ports.tick.unsubscribe(console.log);
 
         aside
           p Ports are Elm's JavaScript as a service. They allow tightly controlled communication with the host platform.
@@ -586,6 +585,32 @@ html
           p Causes a JS error if we send in a value that can't be converted to the expected type.
           p Can be used to model asynchronous interactions such as http calls.
           p This is a much clearer boundary than ClojureScript, for example.
+
+
+      section
+        .content
+          h2 Language Features
+          h4.bullet JavaScript Interoperability &mdash; Ports Demo
+          pre.bullet
+            code.elm
+              | port tick = every second -- Outgoing
+              | port message: Signal String -- Incoming
+          br
+          pre.bullet
+            code.javascript
+              | var count = 0;
+              | function pong (ping) {
+              |   console.log(ping);
+              |   count += 1;
+              |   app.ports.message.send("Pong! " + count);
+              | };
+              | app.ports.tick.subscribe(pong);
+          br
+          div.bullet
+            button#ports-trigger.trigger Run!
+            #ports-demo.demo
+
+        aside
 
 
       // ELM FRP
@@ -623,7 +648,9 @@ html
               | main =
               |   Signal.map (Html.text << toString) Mouse.position
           br
-          #mouse-demo.demo.bullet
+          div.bullet
+            button#mouse-trigger.trigger Run!
+            #mouse-demo.demo
 
 
       section
@@ -655,6 +682,8 @@ html
           p The updates are folded over the app state to generate new state
           p The view reactively renders the new app state
           p This architecture is modular, or "fractal"
+          p This architecture also allows for hot-swapping and time-travel debugging, since state can be computed
+          p at any given "time" by recreating the stream of signals.
 
 
       section
@@ -664,12 +693,14 @@ html
           pre.bullet
             code.elm
               | input =
-              |   Signal.foldp (\dt t -> t + 1) 0 (every second)
+              |   Signal.foldp (\_ t -> t + 1) 0 (every second)
               | 
               | main =
               |   Signal.map (Html.text << toString) input
           br
-          #timer.demo.bullet
+          div.bullet
+            button#timer-trigger.trigger Run!
+            #timer.demo
 
         aside
           p The `foldp` has a very similar signature to a reduce or inject.
@@ -844,8 +875,22 @@ html
     script(src='build/build.js')
 
     script(type='text/javascript')
-      | var div = document.getElementById("mouse-demo");
-      | Elm.embed(Elm.MouseDemo, div);
-      | var div = document.getElementById("timer");
-      | Elm.embed(Elm.Timer, div);
-
+      | var count = 0;
+      | 
+      | function runDemo(triggerId, targetId, demo, opts, cb) {
+      |   document.getElementById(triggerId).addEventListener("click", function () {
+      |     var app = Elm.embed(Elm[demo], document.getElementById(targetId), opts);
+      |     if (cb) { cb(app); }
+      |   });
+      | }
+      | 
+      | runDemo("mouse-trigger", "mouse-demo", "MouseDemo");
+      | runDemo("timer-trigger", "timer", "Timer");
+      | runDemo("ports-trigger", "ports-demo", "PortsDemo", {message: "Loading..."}, function (app) {
+      |   function pong (ping) {
+      |     console.log(ping);
+      |     count += 1;
+      |     app.ports.message.send("Pong! " + count);
+      |   };
+      |   app.ports.tick.subscribe(pong);
+      | });

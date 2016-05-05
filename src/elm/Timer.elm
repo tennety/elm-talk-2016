@@ -5,7 +5,7 @@ import Time exposing (..)
 
 input: Signal Int
 input =
-  Signal.foldp (\dt t -> t + 1) 0 (every second)
+  Signal.foldp (\_ t -> t + 1) 0 (every second)
 
 main: Signal Html
 main =
