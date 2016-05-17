@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Elm or FUD</title>
+    <link rel="stylesheet" type="text/css" href="build/build.css">
+    <script src="build/src/elm.js"></script>
+  </head>
+  <body>
+    <article>
+      <!-- INTRO-->
+      <section data-bespoke-backdrop="elm">
+        <div class="content">
+          <h1 class="bullet">Elm <small>or</small> FUD</h1>
+          <h3 class="bullet">Hunting Bugs with the Compiler</h3><br><br>
+          <pre class="bullet"><code class="elm">{ name    = "Chandu Tennety"
+, company = "Instructure"
+, twitter = "tennety"
+, github  = "tennety"
+}</code></pre>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Why Elm?</h2>
+          <h3 class="bullet">...and why should I care?</h3><img src="/images/elmer.png" class="bullet"><img src="/images/undef.jpg" class="bullet">
+        </div>
+        <aside>
+          <p>JavaScript programmers are like Elmer Fudd.</p>
+          <p>Every morning we pull out our ES6 "fat arrows" and go hunting.</p>
+          <p>So what does that make JavaScript? Bugs Bunny.</p>
+          <p>`undefined is not a function` is like "Eh, what's up doc?"</p>
+          <p>Bugs shows up and whacks us in the head with a giant hammer and we go "Oh, yeah, that's right."</p>
+          <p>We get so used to keeping all those possibilities in our head.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Why Elm?</h2>
+          <h3 class="bullet">...and why should I care?</h3><br>
+          <ul>
+            <li>Fully functional, compile-to-JS</li>
+            <li>Built for reactive UIs, supports FRP out of the box</li>
+            <li>Zealously helpful compiler</li>
+            <li>Approachable, friendly community</li>
+          </ul>
+        </div>
+        <aside>
+          <p>We'll talk about more language features (and how they help) in a bit.</p>
+          <p>HTML/CSS, Canvas, Native?</p>
+          <p>Helpful error messages, diffs, hints...like, <em>really</em> helpful.</p>
+          <p>This is the best part. Slack channel, github, google groups.</p>
+          <p>Let's go over each in more detail.</p>
+        </aside>
+      </section>
+      <!-- LANGUAGE FEATURES-->
+      <section data-bespoke-backdrop="elm">
+        <div class="content">
+          <h1>Language Features</h1>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2 class="bullet">Language Features</h2>
+          <h3 class="bullet">Static types</h3>
+          <h3 class="bullet">Immutable data structures</h3>
+          <h3 class="bullet">Pure functions</h3>
+          <h3 class="bullet">JS interoperability</h3>
+        </div>
+        <aside>
+          <p>We'll cover 4 broad areas with examples.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4><br>
+          <ul>
+            <li>Defining the "shape" of data</li>
+            <li>Contracts between functions and data</li>
+            <li>Eliminating nulls</li>
+          </ul>
+        </div>
+        <aside>
+          <p>Static types often create FUD among programmers used to dynamically typed languages.</p>
+          <p>I've used Ruby, JS, and Clojure, and one thing they all share is a conscious desire to distance themselves from languages like Java.</p>
+          <p>But there's a distinction between types (or classes and interfaces) in Java and types in functional languages.</p>
+          <p>Types in Elm serve to define <em>contracts</em> between functions and the data they work with.</p>
+          <p>These contracts let the compiler guide you away from ever letting bad data in.</p>
+          <p>Static typing provides guarantees that help eliminate a whole class of runtime errors.</p>
+          <p>This has less to do with VM optimization, and more with helping the programmer work with a smaller mental overhead.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4>
+          <pre class="bullet"><code class="elm">longestNameLength: List String -> Maybe Int
+longestNameLength nameList =
+  List.maximum (List.map String.length nameList)</code></pre><br>
+          <pre class="bullet"><code class="elm">longestNameLength ["Tony", "Steve", "T'Challa"]
+-- Just 8 : Maybe.Maybe Int</code><code class="bullet elm">longestNameLength [] -- Nothing : Maybe.Maybe Int</code></pre>
+        </div>
+        <aside>
+          <p>The type annotation is optional, Elm can infer the input and output types</p>
+          <p>The Maybe type kills null. The function explicitly tells you it may return Nothing, so you <em>have</em> to handle it.</p>
+          <p>List's `head` and `tail` functions return Maybes to deal with empty lists.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4>
+          <pre class="bullet"><code class="elm">longestNameLength [1, 2]</code></pre>
+          <pre class="bullet error"><code class="elm">-- TYPE MISMATCH --------------------------------------------- repl-temp-000.elm
+ 
+The argument to function `longestNameLength` is causing a mismatch.
+ 
+4│   longestNameLength [1, 2]
+                       ^^^^^^
+Function `longestNameLength` is expecting the argument to be:
+ 
+    List String
+ 
+But it is:
+ 
+    List number</code></pre>
+        </div>
+        <aside>
+          <p>Our function expects a List of Strings, because only then can it successfully call String.length on the List.</p>
+          <p>Giving it a List of other types causes this compile error.</p>
+          <p>Observe how clear the compiler output is. It tells you exactly where the error is,</p>
+          <p>what it looks like, what is expected and what the difference is. No more wall of text.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4>
+          <pre class="bullet"><code class="elm">longestNameLength ["Peter", 2]</code></pre>
+          <pre class="bullet error"><code class="elm">-- TYPE MISMATCH --------------------------------------------- repl-temp-000.elm
+The 1st and 2nd elements are different types of values.
+ 
+4│       ["Peter", 2]
+                   ^
+The 1st element has this type:
+ 
+    String
+ 
+But the 2nd is:
+ 
+    number
+ 
+Hint: All elements should be the same type of value so that we can iterate
+through the list without running into unexpected values.</code></pre>
+        </div>
+        <aside>
+          <p>Again, if we try to create a List of mixed types, the compiler short circuits even sooner.</p>
+          <p>This time, it even supplies a useful hint, explaining why this expectation is useful.</p>
+          <p>As a result, by the time we use the longestNameLength function in production,</p>
+          <p>the only values it's guaranteed to get is either a list of strings, or an empty list.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h3 class="bullet">Doing this in JavaScript?</h3><img src="/images/doc.png" class="bullet">
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4>
+          <pre class="bullet"><code class="elm">type Maybe a = Just a | Nothing</code></pre><br>
+          <pre class="bullet"><code class="elm">message: Maybe Int -> String
+message maybeLength =
+  case length of
+    Just num ->
+      "The longest name is " ++ (toString num) ++ " characters."
+    Nothing  ->
+      "You gotta give me something to work with here."</code></pre>
+        </div>
+        <aside>
+          <p>Static types give us powerful ways of working with expectations.</p>
+          <p>This is different from OOP land, where you may expect a subclass or check if an object responds to a method.</p>
+          <p>Maybe here is an example of a Union Type or Tagged Union, where the type can carry additional values.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4><br>
+          <pre class="bullet error"><code class="elm">-- MISSING PATTERNS ------------------------------------------ repl-temp-000.elm
+ 
+This `case` does not have branches for all possibilities.
+ 
+7│>  case length of
+8|>    Just num ->
+9|>      "The longest name is " ++ (toString num) ++ " characters."
+ 
+You need to account for the following values:
+ 
+    Maybe.Nothing
+ 
+Add a branch to cover this pattern!
+ 
+If you are seeing this error for the first time, check out these hints:
+&lt;https://github.com/elm-lang/elm-compiler/blob/0.16.0/hints/missing-patterns.md&gt;
+The recommendations about wildcard patterns and `Debug.crash` are important!</code></pre>
+        </div>
+        <aside>
+          <p>As soon as the compiler sees the case, it will not let you terminate it without handling all possible values of the type.</p>
+          <p>Had we neglected the Nothing case, here's the error we would see.</p>
+          <p>Again, notice the clarity of the message, and the helpful further reading at the bottom.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4>
+          <pre><code class="elm">-- type Maybe a = Just a | Nothing
+-- message: Maybe Int -> String</code></pre><br>
+          <pre class="bullet"><code class="elm">message (longestNameLength ["Sharon Carter", "Natasha Romanoff"])
+-- The longest name is 16 characters.
+ 
+message (longestNameLength [])
+-- You gotta give me something to work with here.</code></pre>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4>
+          <pre class="bullet"><code class="elm">type Power = Throw String | Run Int | Shrink
+ 
+comment: String -> Power -> String
+comment hero power =
+  let
+    subject = hero ++ " can "
+    predicate =
+      case power of
+        Throw name ->
+          "throw " ++ name
+        Run speed ->
+          "run at " ++ (toString speed) ++ " minutes a mile"
+        Shrink ->
+          "shrink in size"
+  in
+    subject ++ predicate ++ "."</code></pre>
+        </div>
+        <aside>
+          <p>We define a comment function that takes the name of a hero, a Power, and returns a sentence.</p>
+          <p>The case allows destructuring of the tagged value.</p>
+          <p>If there's a new power, we need to add it to the Union Type.</p>
+          <p>Then we have to explicitly account for it everywhere, or the code won't compile.</p>
+          <p>There can be NO runtime exceptions in this code. Guaranteed.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Static types</h4>
+          <pre><code class="elm">-- type Power = Throw String | Run Int | Shrink
+-- comment: String -> Power -> String</code></pre><br>
+          <pre class="bullet"><code class="elm">List.map (comment "Ant-Man") [Throw "darts", Run 6, Shrink]
+{- ["Ant-Man can throw darts.",
+    "Ant-Man can run at 6 minutes a mile.",
+    "Ant-Man can shrink in size."] : List String -}
+ 
+List.map (comment "Captain America") [Throw "shield", Run 4]
+List.map (comment "Hawkeye") [Throw "Ant-Man", Run 6]</code></pre>
+        </div>
+        <aside>
+          <p>We can map the comment function over a list of Powers.</p>
+          <p>Notice that the comment function is curried.</p>
+          <p>We'll talk about currying and other functional features in a bit.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h3 class="bullet">Doing this in JavaScript?</h3><img src="/images/bugs-dazed.jpg" class="bullet">
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2 class="bullet">Language Features</h2>
+          <h4 class="bullet">Immutable data structures</h4><br>
+          <ul>
+            <li>Lists and Arrays</li>
+            <li>Sets and Dictionaries</li>
+            <li>Records and Tuples</li>
+          </ul>
+        </div>
+        <aside>
+          <p>Immutability guarantees referential transparency and that a set of data transformations always returns the same results.</p>
+          <p>We've already looked at lists. Arrays are built for positional access.</p>
+          <p>Sets are ideal for set operations.</p>
+          <p>Dictionaries are like hashes, a list of key-value pairs.</p>
+          <p>Arrays, Sets and Dicts have no literal syntax, but can be converted to/from Lists.</p>
+          <p>Records are also key-value pairs, and structurally typed. They are more like JS objects.</p>
+          <p>Tuples are like lightweight records. Values can be different types.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2 class="bullet">Language Features</h2>
+          <h4 class="bullet">Pure Functions</h4><br>
+          <ul>
+            <li>Modularity</li>
+            <li>Composability</li>
+            <li>Destructuring and Pattern Matching</li>
+          </ul>
+        </div>
+        <aside>
+          <p>Pure functions allow fast reasoning without worrying about side effects to the state.</p>
+          <p>Pure functions:</p>
+          <p>Rely on no other inputs except the arguments</p>
+          <p>Do not modify state outside the function</p>
+          <p>Always return the same values for the same inputs</p>
+          <p>So they are very easy to reason about and test</p>
+          <p>No mocking, confugration</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Pure Functions</h4><br>
+          <h3 class="bullet">Modularity</h3>
+          <pre class="bullet"><code class="elm">String.repeat: Int -> String -> String
+String.padLeft: Int -> Char -> String -> String
+String.foldl: (Char -> b -> b) -> b -> String -> b
+ 
+List.member: a -> List a -> Bool
+List.intersperse: a -> List a -> List a
+List.scanl: (a -> b -> b) -> b -> List a -> List b</code></pre>
+        </div>
+        <aside>
+          <p>Functions can be described entirely by the inputs and the body.</p>
+          <p>This means they don't need to be defined on an object/class.</p>
+          <p>They can be exposed as part of a module, such as utility functions in String and List.</p>
+          <p>It's a good thing we don't have to depend on the npm padLeft module</p>
+          <p>String.foldl: takes a function that can take a char and a type of b and return a type of b,</p>
+          <p>an initial value of type b, and a string (which furnishes the chars) and returns the result of type b.</p>
+          <p>List.scanl: takes a function that can take a type a value and a type b value and return a type b value,</p>
+          <p>an initial value of type b, and a list of type a, and returns the resulting List of type b.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Pure Functions</h4><br>
+          <h3 class="bullet">Composability (Currying)</h3><br>
+          <pre class="bullet"><code class="elm">String.append
+-- &lt;function: append&gt; : String -> String -> String
+ 
+hail = String.append "Hail "
+-- &lt;function&gt; : String -> String
+ 
+List.map hail ["Hydra", "Thanos"]
+-- ["Hail Hydra","Hail Thanos"] : List String</code></pre>
+        </div>
+        <aside>
+          <p>Functions are curried. For example, String.append takes 2 args and appends the 2nd to the 1st.</p>
+          <p>Providing fewer arguments than specified returns a function that can take the remaining arguments.</p>
+          <p>The compiler infers the type of `hail` as `String -> String`.</p>
+          <p>This allows passing partially applied functions to higher-order functions.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Pure Functions</h4><br>
+          <h3 class="bullet">Composability (Function Composition)</h3><br>
+          <pre class="bullet"><code class="elm">List.map (String.append "Hulk " >> String.toUpper) ["smash", "eat", "jump" ]
+-- ["HULK SMASH","HULK EAT","HULK JUMP"] : List String
+ 
+List.map (String.append "Banner " << String.toLower) ["SMASH", "EAT", "JUMP" ]
+-- ["Banner smash","Banner eat","Banner jump"] : List String</code></pre>
+        </div>
+        <aside>
+          <p>Functions can be composed in both directions</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Pure Functions</h4><br>
+          <h3 class="bullet">Composability (Piping)</h3><br>
+          <pre class="bullet"><code class="elm">String.toUpper <| String.append "Hulk " <| "smash"
+-- "HULK SMASH" : String</code></pre><br>
+          <pre class="bullet"><code class="elm">ngon 4 75
+|> filled clearGrey
+|> move (-10,0)</code></pre>
+        </div>
+        <aside>
+          <p>Also known as chaining or threading in other languages.</p>
+          <p>Functions can be piped in both directions as well.</p>
+          <p>From the Elm examples, drawing a polygon is as simple as this.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Pure Functions</h4><br>
+          <h3 class="bullet">Destructuring and Pattern Matching (Arguments)</h3>
+          <pre class="bullet"><code class="elm">type alias Hero = { name: String, id: String }
+ 
+classified_info: Hero -> String
+classified_info {name, id} =
+  id ++ " is " ++ name ++ "."
+ 
+falcon = Hero "Falcon" "Sam Wilson"
+ 
+classified_info falcon
+-- "Sam Wilson is Falcon." : String</code></pre>
+        </div>
+        <aside>
+          <p>Some of the features of the various data structures we talked about earlier come in useful here.</p>
+          <p>A Type Alias gives us a shorthand for a more lengthy type annotation, with type checks.</p>
+          <p>It also gives us a constructor function for free.</p>
+          <p>There is a proposal out there for doing string interpolation in Elm. For now, we concat.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">Pure Functions</h4><br>
+          <h3 class="bullet">Destructuring and Pattern Matching (Content)</h3>
+          <pre class="bullet"><code class="elm">length list =
+  case list of
+    [] -> 0
+    [_] -> 1
+    x::xs -> 1 + (length xs)</code></pre><br>
+          <pre class="bullet"><code class="elm">team_cap = ["Ant-Man", "Scarlet Witch", "Hawkeye", "Falcon", "Winter Soldier"]
+length team_cap == List.length team_cap -- 5 : Int</code></pre>
+        </div>
+        <aside>
+          <p>We saw examples of case destructuring earlier in the static type section.</p>
+          <p>We go from specific to general matches so we can return early and accurately.</p>
+          <p>Caution: `x::xs` will always match, and returns the head and rest of a list.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2 class="bullet">Language Features</h2>
+          <h4 class="bullet">JavaScript Interoperability</h4><br>
+          <h3 class="bullet">Embedding in HTML</h3>
+          <pre class="bullet"><code class="elm">Elm.fullscreen</code></pre><br>
+          <pre class="bullet"><code class="elm">Elm.embed</code></pre><br>
+          <pre class="bullet"><code class="elm">Elm.worker</code></pre>
+        </div>
+        <aside>
+          <p>Interop allows powerful yet controlled access to the native/host environment</p>
+          <p>The compiled output of `elm-make` is a JavaScript file that contains an `Elm` namespace object.</p>
+          <p>These embedding functions provide Elm with the browser context where the elm program can run.</p>
+          <p>They also return an instance of your app which you can use from the JS side to interact with.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">JavaScript Interoperability &mdash; Ports</h4><br>
+          <h3 class="bullet">Outgoing (Elm to JS)</h3>
+          <pre class="bullet"><code class="elm">port tick: Signal Float
+port tick = every second</code></pre><br>
+          <pre class="bullet"><code class="javascript">var myApp = Elm.fullscreen(Elm.MyApp);
+myApp.ports.tick.subscribe(console.log);
+myApp.ports.tick.unsubscribe(console.log);</code></pre>
+        </div>
+        <aside>
+          <p>Ports are Elm's JavaScript as a service. They allow tightly controlled communication with the host platform.</p>
+          <p>We'll talk more about Signals in a little bit, but think of them as a value that changes over time.</p>
+          <p>`every second` is valid Elm code that creates a Signal that changes every second.</p>
+          <p>Ports we create in our app are available in the ports object on the JS side.</p>
+          <p>We can subscribe/unsubscribe to them using a callback.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">JavaScript Interoperability &mdash; Ports</h4><br>
+          <h3 class="bullet">Incoming (JS to Elm)</h3>
+          <pre class="bullet"><code class="elm">port new_hero: Signal Hero</code></pre><br>
+          <pre class="bullet"><code class="javascript">superheroRegistrationApp.ports.new_hero.send({
+  name: "Peter Parker",
+  id: "Spider-Man"
+});</code></pre>
+        </div>
+        <aside>
+          <p>Ports without an implementation are assumed to be incoming ports.</p>
+          <p>Values sent in from JS on these ports are also treated as Signals.</p>
+          <p>The values are automatically converted into the types the port expects.</p>
+          <p>Causes a JS error if we send in a value that can't be converted to the expected type.</p>
+          <p>Can be used to model asynchronous interactions such as http calls.</p>
+          <p>This is a much clearer boundary than ClojureScript, for example.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Language Features</h2>
+          <h4 class="bullet">JavaScript Interoperability &mdash; Ports Demo</h4>
+          <pre class="bullet"><code class="elm">port tick = every second -- Outgoing
+port message: Signal String -- Incoming</code></pre><br>
+          <pre class="bullet"><code class="javascript">var count = 0;
+function pong (ping) {
+  console.log(ping);
+  count += 1;
+  app.ports.message.send("Pong! " + count);
+};
+app.ports.tick.subscribe(pong);</code></pre><br>
+          <div class="bullet">
+            <button id="ports-trigger" class="trigger">Run!</button>
+            <div id="ports-demo" class="demo"></div>
+          </div>
+        </div>
+        <aside></aside>
+      </section>
+      <!-- ELM FRP-->
+      <section data-bespoke-backdrop="elm">
+        <div class="content">
+          <h1>Functional Reactive Programming (FRP) in Elm</h1>
+        </div>
+        <aside>
+          <p>FRP is first-class in Elm. Let's do a quick overview.</p>
+          <p>We briefly saw one way how Signals work. Let's talk more about the why of them.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>FRP in Elm</h2>
+          <h4 class="bullet">Signals</h4>
+          <div class="bullet"><img src="/images/signals.gif" height="350">
+            <cite><a href="http://yang-wei.github.io/elmflux/">&ndash; Yang Wei's Visualization</a></cite>
+          </div>
+        </div>
+        <aside>
+          <p>The `clicks` Signal has a value whenever the mouse button is clicked.</p>
+          <p>The `everySecond` signal is what we saw earlier, it has a value every second.</p>
+          <p>`sampleOn` is a utility function in the Signal module.</p>
+          <p>It contains the value from the 2nd signal whenever there's a value from the first.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>FRP in Elm</h2>
+          <h4 class="bullet">Signals Demo &mdash; Mouse Position</h4>
+          <pre class="bullet"><code class="elm">main =
+  Signal.map (Html.text << toString) Mouse.position</code></pre><br>
+          <div class="bullet">
+            <button id="mouse-trigger" class="trigger">Run!</button>
+            <div id="mouse-demo" class="demo"></div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2 class="bullet">FRP in Elm</h2>
+          <div class="bullet"><img src="/images/arch.png" height="350" class="with-bg">
+            <cite><a href="http://elm-lang.org/guide/reactivity">&ndash; elm-lang.org</a></cite>
+          </div>
+        </div>
+        <aside>
+          <p>User actions, Ajax, time etc are streams of inputs to the system</p>
+          <p>App state is the result of transformations over time</p>
+          <p>The view is a function of the curent app state</p>
+          <p>Updates to the state cause the view to react</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2 class="bullet">FRP in Elm</h2>
+          <div class="bullet"><img src="/images/signals.png" height="350" class="with-bg">
+            <cite><a href="http://elm-lang.org/guide/reactivity">&ndash; elm-lang.org</a></cite>
+          </div>
+        </div>
+        <aside>
+          <p>The central `foldp` is responsible for maintaining the app state across the different input streams.</p>
+          <p>Low-level events are mapped to higher level actions which trigger updates</p>
+          <p>The updates are folded over the app state to generate new state</p>
+          <p>The view reactively renders the new app state</p>
+          <p>This architecture is modular, or "fractal"</p>
+          <p>This architecture also allows for hot-swapping and time-travel debugging, since state can be computed</p>
+          <p>at any given "time" by recreating the stream of signals.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>FRP in Elm</h2>
+          <h4 class="bullet">Signal.foldp Demo &mdash; Simple Timer</h4>
+          <pre class="bullet"><code class="elm">input =
+  Signal.foldp (\_ t -> t + 1) 0 (every second)
+ 
+main =
+  Signal.map (Html.text << toString) input</code></pre><br>
+          <div class="bullet">
+            <button id="timer-trigger" class="trigger">Run!</button>
+            <div id="timer" class="demo"></div>
+          </div>
+        </div>
+        <aside>
+          <p>The `foldp` has a very similar signature to a reduce or inject.</p>
+          <p>It takes an initial value, and a function that reduces the values passed in.</p>
+          <p>As the input Signal sends in new values, the foldp returns the accumulated value as a Signal.</p>
+          <p>This pattern is used in the Elm Architecture to transform application state.</p>
+          <p>Usually, an Elm program has a single foldp that takes a model and an update function and returns a new model.</p>
+          <p>The view then simply renders the model as it changes into a virtual dom.</p>
+          <p>The `virtual-dom` library then takes care of updating the actual dom.</p>
+          <p>Lets break the timer example into a simple Model-View-Update pattern.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>FRP in Elm</h2>
+          <h4 class="bullet">Signal.foldp Demo &mdash; Simple Timer</h4>
+          <pre class="bullet"><code class="elm">type alias Model = Int
+model = 0</code></pre>
+          <pre class="bullet"><code class="elm">update: Float -> Model -> Model
+update _ model =
+  model + 1</code></pre>
+          <pre class="bullet"><code class="elm">view: Model -> Html
+view model =
+  model
+    |> toString
+    |> Html.text</code></pre>
+          <pre class="bullet"><code class="elm">main: Signal Html
+main =
+  Signal.map view (Signal.foldp update model (every second))</code></pre>
+        </div>
+        <aside>
+          <p>This makes Elm apps very modular. Each component is either a value or a function.</p>
+          <p>Communication happens via Signals, which abstract away mutations.</p>
+          <p>In fact, it works so well that there's a StartApp library</p>
+          <p>which allows simple UIs to be written only as Model/View/Update,</p>
+          <p>and the Signals are entirely hidden.</p>
+          <p>For more detail, go through the Elm Architecture Tutorial.</p>
+          <p>Even if you don't care about Elm, that article has some awesome ideas.</p>
+        </aside>
+      </section>
+      <!-- COMMUNITY-->
+      <section data-bespoke-backdrop="elm">
+        <div class="content">
+          <h1>Community</h1>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Community</h2>
+          <h4 class="bullet">Packages</h4><br>
+          <h3 class="bullet">elm-package</h3>
+          <ul>
+            <li>Install packages</li>
+            <li>Publish packages</li>
+            <li>Detect API changes...</li>
+            <li>...and enforce Semver</li>
+          </ul>
+        </div>
+        <aside>
+          <p>Elm comes with a package manager called elm-package.</p>
+          <p>Run `elm package diff` to see the changes between versions.</p>
+          <p>Run `elm package bump` to automatically update the version number when publishing.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Community</h2>
+          <h4 class="bullet">Packages</h4>
+          <h3>Elm Core</h3>
+          <ul>
+            <li>Basics (Comparison, Booleans, Math, etc)</li>
+            <li>Data Structures</li>
+            <li>Signals</li>
+          </ul>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Community</h2>
+          <h4 class="bullet">Packages</h4>
+          <h3>Over 200 contributed packages</h3>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Community</h2>
+          <h4 class="bullet">Google Groups</h4>
+          <ul>
+            <li>elm-discuss</li>
+            <li>elm-dev</li>
+          </ul>
+        </div>
+        <aside>
+          <p>elm-discuss is good for any kind of discussion. People are friendly and helpful.</p>
+          <p>elm-dev is for coordinating open-source work.</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Community</h2>
+          <h4 class="bullet">Social</h4>
+          <ul>
+            <li><a href="http://webchat.freenode.net/?channels=elm">#elm on IRC</a></li>
+            <li><a href="http://elmlang.herokuapp.com/">Elm Slack</a></li>
+            <li><a href="https://twitter.com/elmlang">ElmLang on Twitter</a></li>
+            <li><a href="http://github.com/elm-lang">Github Org</a></li>
+          </ul>
+        </div>
+        <aside>
+          <p>I haven't been on IRC, but the slack room is great. You know you want another slack room!</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Community</h2><a href="https://github.com/elm-lang/error-message-catalog">Elm Error Message Catalog</a><br><br><img src="/images/error-catalog.png" class="with-bg">
+        </div>
+        <aside>
+          <p>This is an open-source project that accepts contributions with every possible error in Elm</p>
+          <p>with the intention of building more meaningful error messages to help in each situation.</p>
+        </aside>
+      </section>
+      <!-- FUTURE-->
+      <section data-bespoke-backdrop="elm">
+        <div class="content">
+          <h1>Future of Elm</h1>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Future of Elm</h2>
+          <h4 class="bullet">Oh the places you'll go!</h4>
+          <div class="bullet">
+            <h3>The first ever</h3>
+            <h3>Elm Conference</h3>
+          </div><br>
+          <p class="bullet center">co-hosted with the Strange Loop Conference in</p>
+          <p class="bullet">St Louis, Missouri, USA</p>
+          <p class="bullet">15th–17th September 2016</p>
+        </div>
+      </section>
+      <section>
+        <div class="content">
+          <h2>Future of Elm</h2>
+          <h4 class="bullet">Oh the places you'll go!</h4>
+          <ul>
+            <li><a href="http://elm-lang.org/blog/new-adventures-for-elm">Elm Software Foundation</a></li>
+            <li><a href="https://github.com/elm-native-ui/elm-native-ui">Elm Native UI</a></li>
+            <li><a href="https://github.com/NoRedInk/take-home">Elm on the server</a></li>
+          </ul>
+        </div>
+      </section>
+      <!-- CONCLUSION-->
+      <section>
+        <div class="content"><img src="/images/elmer.png" class="bullet"></div>
+        <aside>
+          <p>In conclusion, remember this? How we JS programmers are like Elmer Fudd? Well...</p>
+        </aside>
+      </section>
+      <section>
+        <div class="content"><img src="/images/elmer-iron-man.jpg" class="bullet"></div>
+        <aside>
+          <p>Elm turns us into Iron Man.</p>
+        </aside>
+      </section>
+    </article>
+    <script src="build/build.js"></script>
+    <script type="text/javascript">
+      var count = 0;
+       
+      function runDemo(triggerId, targetId, demo, opts, cb) {
+        document.getElementById(triggerId).addEventListener("click", function () {
+          var app = Elm.embed(Elm[demo], document.getElementById(targetId), opts);
+          if (cb) { cb(app); }
+        });
+      }
+       
+      runDemo("mouse-trigger", "mouse-demo", "MouseDemo");
+      runDemo("timer-trigger", "timer", "Timer");
+      runDemo("ports-trigger", "ports-demo", "PortsDemo", {message: "Loading..."}, function (app) {
+        function pong (ping) {
+          console.log(ping);
+          count += 1;
+          app.ports.message.send("Pong! " + count);
+        };
+        app.ports.tick.subscribe(pong);
+      });
+    </script>
+  </body>
+</html>
