@@ -1,4 +1,7 @@
 # Elm or FUD
+
+NOTE: Some parts of this talk are based on Elm version 0.16, and do not apply to Elm v0.17, which was released 5/9/2016 (2 days after the date of this talk). The majority of this material is unchanged, however.
+
 > A [Bespoke.js](http://markdalgleish.com/projects/bespoke.js) presentation, built with [generator-bespoke](https://github.com/markdalgleish/generator-bespoke)
 
 ## View slides locally
